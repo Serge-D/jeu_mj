@@ -1,0 +1,15 @@
+include includes/head.pug
+
+
+
+
+form#formulaire(action='' method='get')
+        label(for='name') Nom
+        br 
+        input#nameJ1(type='text' name='name')
+        br
+        label(for='mdp') Mot de passe
+        br
+        input#mdp(type='password' name= 'mdp')
+        br
+        input(type='submit' value='Jouer')

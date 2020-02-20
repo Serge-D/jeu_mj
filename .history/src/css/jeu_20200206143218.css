@@ -1,0 +1,140 @@
+/* header */
+
+h1 {    
+    color: black;
+    text-align: center;
+    margin-block-start: 0;
+}
+
+
+ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    list-style-type: none;
+    
+}
+
+a{
+    text-decoration: none;
+    font-size: 25px;
+    font-family: 'Comic Sans MS',serif;
+    color: black;
+}
+
+/* section */
+
+#formulaire {
+    text-align: center;
+    margin-top: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+
+#fenetreDeJeu {
+    font-family: 'Comic Sans MS',serif;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 90px;
+    width: 1200px;
+    border: 2px solid black;
+    height: 700px;
+    position: relative;
+}
+
+#numQuestion {
+    width: 200px;
+    height: 25px;
+    border: 2px solid green;
+    border-radius: 10px;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#theme {
+    width: 350px;
+    height: 28px;
+    border: 2px solid green;
+    border-radius: 10px;
+    font-size: 22px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#question {
+    width: 950px;
+    height: 50px;
+    border: 2px solid green;
+    border-radius: 10px;
+    font-size: 2.1em;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+
+#reponseA {
+    width: 500px;
+    height: 60px;
+    border : 2px solid greenyellow;
+    border-radius: 50px;
+    font-size: 40px;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#reponseB {
+    width: 500px;
+    height: 60px;
+    border : 2px solid greenyellow;
+    border-radius: 50px;
+    font-size: 40px;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#reponseC {
+    width: 500px;
+    height: 60px;
+    border : 2px solid greenyellow;
+    border-radius: 50px;
+    font-size: 40px;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#reponseD {
+    width: 500px;
+    height: 60px;
+    border : 2px solid greenyellow;
+    border-radius: 50px;
+    font-size: 40px;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;   
+}
+
+#anecdote {
+    width: 1100px;
+    height: 50px;
+    border: 2px solid blue;
+    border-radius: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 40px;
+}
