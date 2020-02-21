@@ -1,15 +1,19 @@
 include includes/head.pug
 
+
+p=present
+img#avatarfinal(src=image alt='')
+
 section
   #fenetreDeJeu
-    #numQuestion Question 1
-    #theme theme
-    #question Emplacement de la question
-    #reponseA reponse a
-    #reponseB reponse b
-    #reponseC reponse c
-    #reponseD reponse d
-    #anecdote
+    //- #numQuestion=question.id
+    #theme=question.theme
+    #question=question.question
+    #reponseA=question.propositions[0]
+    #reponseB=question.propositions[1]
+    #reponseC=question.propositions[2]
+    #reponseD=question.propositions[3]
+    #anecdote=question.anecdote
 
 
 

@@ -1,7 +1,7 @@
 include includes/head.pug
 
 p=mess
-form(action='/avatar' method='POST')
+form#avatar(action='/avatar' method='POST')
     label(for='choix') Choisissez votre avatar
     br
     input#avatar1(type='radio' name='image' value='/images/avatar1.png' checked='')

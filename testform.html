@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/avatar" method="POST">
+    <!-- <form action="/avatar" method="POST">
         <label for="choix">Choisissez votre avatar</label><br/>
         <label for="">Avatar 1</label> <img src="/images/avatar1.png" alt="">
         <input type="radio" name="image" value="/images/avatar1.png"  id="avatar1" checked>
@@ -20,6 +20,25 @@
         <input type="radio" name="image" value="/images/avatar9.png"  id="avatar9">
         <input type="radio" name="image" value="/images/avatar10.png"  id="avatar10">
         <input type="submit" value="Valider">
-    </form>
+    </form> -->
+
+    <div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
+        <b>ROOMS</b>
+        <div id="rooms"></div>
+    </div>
+
+    <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+        <div id="conversation"></div>
+        <input id="data" style="width:200px;" />
+        <input type="button" id="datasend" value="send" />
+    </div>
+
+   <div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+       <div id="room creation"></div>
+       <input id="roomname" style="width:200px;" />
+        <input type="button" id="roombutton" value="create room" />
+   </div>
+
+
 </body>
 </html>

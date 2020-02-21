@@ -13,9 +13,14 @@ app.set("view engine", "pug");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/src"));
+app.use("/images", express.static(__dirname + "/src/images"));
 app.use(cookieParser());
 
 const MongoStore = connectMongo(expressSession)
+
+//variable pour la date d'expiration des cookies
+var cookieExpiration = new Date( Date.now() + 3600 ); // 1 hour
+console.log(cookieExpiration);
 
 const options = {
     store: new MongoStore({
@@ -24,11 +29,30 @@ const options = {
     secret: "1234Secret",
     saveUninitialized: true,
     resave: false,
+    expires: cookieExpiration
 }
 
 app.use(expressSession(options));
 
+app.use(function (req, res, next) {
+    if(req.url == "/home" || req.url == "/auth"){
+        next()
+    }else{
+        if(!req.session.userName){
+            console.log("test")
+            res.redirect("/home")
+        }else{
+            console.log("test2")
+            next()
+        }     
+    }
+}
 
+  );
+
+app.get("/home", function(req, res) {
+    res.render("home");
+})
 app.get("/", function (req, res) {
         
         // console.log('session==>', req.cookies)
@@ -67,11 +91,13 @@ app.post("/auth", function (req, res) {
         collection.find({ pseudo: ident }).toArray(function (err, data) {
             if (data.length) {
 
-                console.log("ici" + data);
+                // console.log("ici" + data);
                 let user = data[0];
-                console.log(user);
-                    if(user.mdp === motDePasse){
-                        res.render("avatar", { mess: "Bienvenue " + ident });
+                // console.log(user);
+                    if(user.mdp === motDePasse){ // doit peut etre rajouter user.identifiant === ident
+                        req.session.userName = user.pseudo // => user values?
+                        // req.session.cookie.expires = cookieExpiration
+                        res.render("avatar", { mess: "Bienvenue " + req.session.userName });
                         // req.session.pseudo
                     }else{
                         res.render("home", {message: "Identifiants incorrects / Identifiants déjà pris"});
@@ -98,9 +124,67 @@ app.post("/auth", function (req, res) {
     })
 });
 
+app.get("/avatar", function(req, res){
+    res.render("avatar", { mess: "Bienvenue " + req.session.userName });
+    // console.log(req.body.image);
+    // MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
+    //     if(err){
+    //         console.log("erreur");
+    //     }else{
+    //         let db = client.db("jeu_mj");
+    //         let collection = db.collection("utilisateurs");
+    //         collection.find().toArray(function(err, data){
+    //             if(err){
+    //                 next();
+    //             }else{
+    //                 res.render("jeu", {present: data[0].pseudo, image:req.body.image});
+    //             }
+    //         })
 
+    //     }
+    // });
+});
 
+app.post("/avatar", function(req, res){
+    req.session.avatar = req.body.image // => user values?
+    console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    res.redirect("/jeu")
+    // res.render("jeu", {image:req.body.image});
+    // // console.log(req.body.image);
+    // MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
+    //     if(err){
+    //         console.log("erreur");
+    //     }else{
+    //         let db = client.db("jeu_mj");
+    //         let collection = db.collection("utilisateurs");
+    //         collection.find().toArray(function(err, data){
+    //             if(err){
+    //                 next();
+    //             }else{
+    //                 res.render("jeu", {image:req.body.image});
+    //             }
+    //         })
 
+    //     }
+    // });
+});
+
+app.get("/jeu", function(req, res){
+    console.log("ICI");
+    MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
+        let db = client.db("jeu_mj");
+        let collection = db.collection("questions");
+        collection.find().toArray(function(err, data){
+            if(err){
+                console.log("erreur");
+            }else{
+                console.log("-----");
+                console.log(data);
+                res.render("jeu", {image: req.session.avatar, question: data[0]});
+            }
+        })
+    });
+});
 
 
 
@@ -123,7 +207,40 @@ const io = require("socket.io");
 
 const webSocketServer = io(serverHTTP);
 
+var usernames = {};
+var rooms = ["Lobby"];
+
 webSocketServer.on("connect", function(socket){
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
+
+    // socket.on("adduser", function(username){
+    //     socket.username = username;
+    //     socket.room = "Lobby";
+    //     usernames[username] = username;
+    //     socket.join("Lobby");
+    //     socket.emit("updaterooms", rooms, "Lobby");
+    // });
+
+    // socket.on("create", function(room){
+    //     rooms.push(room);
+    //     socket.emit("updaterooms", rooms, socket.room)
+    // });
+
+    // socket.on("switchRoom", function(newroom){
+    //     var oldroom;
+    //     oldroom = socket.room;
+    //     socket.leave(socket.room);
+    //     socket.join(newroom);
+    //     socket.room = newroom;
+    //     socket.emit("updaterooms", rooms, newroom);
+    // });
+
+    // socket.on("disconnect", function(){
+    //     delete usernames[socket.username];
+    //     io.sockets.emit("updateusers",usernames);
+    //     socket.leave(socket.room);
+    // })
+
+
 });
