@@ -1,0 +1,17 @@
+include includes/head.pug
+
+form#tarace(enctype="multipart/form-data", action="/room", method="post", name="fileinfo")
+    label(for="choix") Choisir une partie
+    br
+    select#choix_partie(name="partie")
+        option(value="") --Sélectionner une partie--
+        option(value="room1") Partie 1
+        option(value="room2") Partie 2 
+        option(value="room3") Partie 3
+        option(value="room4") Partie 4
+        option(value="room5") Partie 5
+    input(type="text", id="test", name="test")
+    button Submit
+
+
+include includes/footer.pug

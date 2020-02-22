@@ -55,16 +55,20 @@ app.get("/home", function(req, res) {
 })
 app.get("/", function (req, res) {
         
-        // console.log('session==>', req.cookies)
-        // if(req.cookies){
-        //     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
-        //         let dbase = client.db("jeu_mj");
-        //         let collect = dbase.collection("sessions");
-        //         console.log(req.session);
-                
-        //     })
-        // }
-    res.render("home");
+        console.log('session==>', req.cookies)
+        if(req.cookies){
+            MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
+                let dbase = client.db("jeu_mj");
+                let collect = dbase.collection("sessions");
+                console.log(req.session.userName);
+                if(req.session.authentification === true){
+                    res.redirect("/room")
+                }else{
+                    res.redirect("/home");
+                }
+            })
+        }
+    
 })
 
 app.post("/auth", function (req, res) {
@@ -96,6 +100,7 @@ app.post("/auth", function (req, res) {
                 // console.log(user);
                     if(user.mdp === motDePasse){ // doit peut etre rajouter user.identifiant === ident
                         req.session.userName = user.pseudo // => user values?
+                        req.session.authentification = true;
                         // req.session.cookie.expires = cookieExpiration
                         res.render("avatar", { mess: "Bienvenue " + req.session.userName });
                         // req.session.pseudo
@@ -148,7 +153,7 @@ app.get("/avatar", function(req, res){
 app.post("/avatar", function(req, res){
     req.session.avatar = req.body.image // => user values?
     console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    res.redirect("/jeu")
+    res.redirect("/room")
     // res.render("jeu", {image:req.body.image});
     // // console.log(req.body.image);
     // MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
@@ -169,6 +174,19 @@ app.post("/avatar", function(req, res){
     // });
 });
 
+app.get("/room", function(req, res){
+    res.render("room")
+})
+
+app.post("/room", function(req, res){
+    MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
+        let db = client.db("jeu_mj");
+        let collection= db.collection("rooms");
+        console.log()
+        
+    })
+})
+
 app.get("/jeu", function(req, res){
     console.log("ICI");
     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
@@ -178,8 +196,8 @@ app.get("/jeu", function(req, res){
             if(err){
                 console.log("erreur");
             }else{
-                console.log("-----");
-                console.log(data);
+                // console.log("-----");
+                // console.log(data);
                 res.render("jeu", {image: req.session.avatar, question: data[0]});
             }
         })
@@ -222,10 +240,11 @@ webSocketServer.on("connect", function(socket){
     //     socket.emit("updaterooms", rooms, "Lobby");
     // });
 
-    // socket.on("create", function(room){
-    //     rooms.push(room);
-    //     socket.emit("updaterooms", rooms, socket.room)
-    // });
+    socket.on("create_room", function(room){
+        console.log(room)
+        rooms.push(room);
+        socket.emit("updaterooms", rooms, socket.room)
+    });
 
     // socket.on("switchRoom", function(newroom){
     //     var oldroom;
