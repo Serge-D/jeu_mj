@@ -28,3 +28,12 @@ window.addEventListener("DOMContentLoaded", function(){
     })
        
 })
+
+
+/*
+changer mon pug room avec un form pour la creation d'une room (lui donner un nom)
+la room la configurer avec un uuid le nom et minimunjoueur et maxjoueur 
+afficher la liste des rooms deja existantes et donner la possibilité de la rejoindre  
+
+ensuite dans chaque room emit la page jeu et faire fonctions pour afficher les questions et reponses 
+*/
