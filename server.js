@@ -21,6 +21,7 @@ const MongoStore = connectMongo(expressSession)
 //variable pour la date d'expiration des cookies
 var cookieExpiration = new Date( Date.now() + 3600 ); // 1 hour
 console.log(cookieExpiration);
+var sessionlife = 60 * 60* 1000;
 
 const options = {
     store: new MongoStore({
@@ -29,7 +30,12 @@ const options = {
     secret: "1234Secret",
     saveUninitialized: true,
     resave: false,
-    expires: cookieExpiration
+    expires: cookieExpiration,
+    rolling: true, // reset maxAge on every response
+    cookie: {
+        maxAge: sessionlife,
+        expires: new Date(Date.now() + sessionlife)
+    },
 }
 
 app.use(expressSession(options));
@@ -179,13 +185,35 @@ app.get("/room", function(req, res){
 })
 
 app.post("/room", function(req, res){
+    console.log("RRRRRRRRRRRRRRRRRRRRR")
     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
+        if(err){
+            console.log("erreur")
+        }
         let db = client.db("jeu_mj");
         let collection= db.collection("rooms");
-        console.log()
-        
+        console.log("-----")
+        console.log(req.body)
+        console.log("-----")
+        let nomDeLaPartie = req.body.roomname;
+        let insertion= {};
+
+        collection.find({nom: nomDeLaPartie}).toArray(function(err, data){
+            if(!data.length){
+                console.log("room inexistante");
+                insertion.uuid = uuidv1();
+                insertion.nom = nomDeLaPartie;
+                insertion.maxJoueur = 2;
+                insertion.minJoueur = 1;
+                collection.insertOne(insertion, function(err, results){
+                    console.log("room créée")
+                })
+            }
+        })        
     })
 })
+
+app.post("/")
 
 app.get("/jeu", function(req, res){
     console.log("ICI");
@@ -196,20 +224,14 @@ app.get("/jeu", function(req, res){
             if(err){
                 console.log("erreur");
             }else{
-                // console.log("-----");
-                // console.log(data);
-                res.render("jeu", {image: req.session.avatar, question: data[0]});
+                
+                res.render("jeu", {present:req.session.userName , image: req.session.avatar, question: data[0]});
             }
         })
     });
 });
 
 
-
-
-// app.get("/jeu", function(req, res){
-//     res.render("jeu");
-// })
 
 
 
@@ -225,26 +247,20 @@ const io = require("socket.io");
 
 const webSocketServer = io(serverHTTP);
 
-var usernames = {};
 var rooms = ["Lobby"];
 
 webSocketServer.on("connect", function(socket){
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
 
-    // socket.on("adduser", function(username){
-    //     socket.username = username;
-    //     socket.room = "Lobby";
-    //     usernames[username] = username;
-    //     socket.join("Lobby");
-    //     socket.emit("updaterooms", rooms, "Lobby");
-    // });
 
     socket.on("create_room", function(room){
-        console.log(room)
+        // console.log(room)
         rooms.push(room);
         socket.emit("updaterooms", rooms, socket.room)
     });
+
+    socket.join()
 
     // socket.on("switchRoom", function(newroom){
     //     var oldroom;
@@ -255,11 +271,9 @@ webSocketServer.on("connect", function(socket){
     //     socket.emit("updaterooms", rooms, newroom);
     // });
 
-    // socket.on("disconnect", function(){
-    //     delete usernames[socket.username];
-    //     io.sockets.emit("updateusers",usernames);
-    //     socket.leave(socket.room);
-    // })
+    socket.on("disconnect", function(){
+        socket.leave(socket.room);
+    })
 
-
+    
 });
