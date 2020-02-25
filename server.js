@@ -61,7 +61,7 @@ app.get("/home", function(req, res) {
 })
 app.get("/", function (req, res) {
         
-        console.log('session==>', req.cookies)
+        // console.log('session==>', req.cookies)
         if(req.cookies){
             MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
                 let dbase = client.db("jeu_mj");
@@ -292,6 +292,10 @@ webSocketServer.on("connect", function(socket){
         
     });
 
+    // /**** partie pour quitter la room *****/ 
+    socket.on("disconnect", function(){
+        socket.leave(socket.room);
+    })
 
 });
     // /******* Autre facon de faire 
@@ -313,10 +317,6 @@ webSocketServer.on("connect", function(socket){
     // ***********/
 
 
-    // /**** partie pour quitter la room *****/ 
-    // // socket.on("disconnect", function(){
-    // //     socket.leave(socket.room);
-    // // })
 
 
     // /********** autre facon de faire encore ********/
