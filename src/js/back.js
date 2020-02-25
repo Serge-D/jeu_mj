@@ -1,3 +1,12 @@
+"use strict"
+
+var theme = window.document.getElementById("theme");
+var question = window.document.getElementById("question");
+var reponseA = window.document.getElementById("reponseA");
+var reponseB = window.document.getElementById("reponseB");
+var reponseC = window.document.getElementById("reponseC");
+var reponseD = window.document.getElementById("reponseD");
+var anecdote = window.document.getElementById("anecdote");
 
 window.addEventListener("DOMContentLoaded", function(){
     var ioClient = io("http://localhost:8080");
@@ -33,15 +42,26 @@ window.addEventListener("DOMContentLoaded", function(){
     // function switchRoom(room){
     //     socket.emit("switchRoom", room)
     // }
-    
-    
+
+    // ioClient.emit('create', "room1");
+    // console.log("room1")
+
+    /******** methode pour changer les questions *******/
+
+    ioClient.on("questions", function(event){
+        setTimeout(() => {
+            var questionsData = JSON.parse(event.data);
+            console.log(questionsData);
+            
+            
+            
+            ioClient.send()
+        }, 30000);
+    });
+
+
+
+
 })
 
 
-/*
-changer mon pug room avec un form pour la creation d'une room (lui donner un nom)
-la room la configurer avec un uuid le nom et minimunjoueur et maxjoueur 
-afficher la liste des rooms deja existantes et donner la possibilité de la rejoindre  
-
-ensuite dans chaque room emit la page jeu et faire fonctions pour afficher les questions et reponses 
-*/

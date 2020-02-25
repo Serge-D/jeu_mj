@@ -205,6 +205,7 @@ app.post("/room", function(req, res){
                 insertion.nom = nomDeLaPartie;
                 insertion.maxJoueur = 2;
                 insertion.minJoueur = 1;
+                insertion.nomDesJoueurs = [req.session.userName];
                 collection.insertOne(insertion, function(err, results){
                     console.log("room créée")
                 })
@@ -213,7 +214,7 @@ app.post("/room", function(req, res){
     })
 })
 
-app.post("/")
+
 
 app.get("/jeu", function(req, res){
     console.log("ICI");
@@ -253,27 +254,72 @@ webSocketServer.on("connect", function(socket){
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
 
-
+    /********* Partie avec nico  ***********/
     socket.on("create_room", function(room){
         // console.log(room)
         rooms.push(room);
-        socket.emit("updaterooms", rooms, socket.room)
+        socket.join(room);
+        socket.emit("updaterooms", rooms, socket.room);
+
+    });
+    
+    console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
+
+    socket.on("questions", function(socketData){
+        var questionsData = JSON.parse(socketData.utf8Data)
+        MongoClient.connect("mongodb://localhost:27017",{ useUnifiedTopology: true },function(err, client){
+            if(err){
+                console.log("Cannot connect to database");
+            }else{
+                let db = client.db("jeu_mj");
+                let collection = db.collection("questions");
+                collection.find().toArray(function(err, data){
+                    if(err){
+                        console.log("impossible d'acceder a la collection")
+                    }else{
+                        data.forEach(function(){
+                            socket.emit()
+                        });
+                    }
+                });
+            }
+        });
+
+        const questionsDataAsString = JSON.stringify(questionsData);
+        establishedSockets.forEach(function (socket) {
+          socket.sendUTF(questionsDataAsString);
+        });
+        
     });
 
-    socket.join()
 
-    // socket.on("switchRoom", function(newroom){
-    //     var oldroom;
-    //     oldroom = socket.room;
-    //     socket.leave(socket.room);
-    //     socket.join(newroom);
-    //     socket.room = newroom;
-    //     socket.emit("updaterooms", rooms, newroom);
-    // });
-
-    socket.on("disconnect", function(){
-        socket.leave(socket.room);
-    })
-
-    
 });
+    // /******* Autre facon de faire 
+    // // socket.on("connexion", function(socket){
+    // //     socket.join("room 1");
+    // // });
+
+    // // console.log(socket.adapter.rooms)
+
+    // // socket.to("room1").emit("Bonjour");
+    // ********/
+
+    // /************* autre facon 
+    // // // socket.join('room 237', () => {
+    // // //     let rooms = Object.keys(socket.rooms);
+    // // //     console.log(rooms); // [ <socket.id>, 'room 237' ]
+    // // //     webSocketServer.to('room 237').emit('a new user has joined the room'); // broadcast to everyone in the room
+    // // //  });
+    // ***********/
+
+
+    // /**** partie pour quitter la room *****/ 
+    // // socket.on("disconnect", function(){
+    // //     socket.leave(socket.room);
+    // // })
+
+
+    // /********** autre facon de faire encore ********/
+    // // socket.on('create', function(room) {
+    // //     socket.join(room);});
+    // //   
