@@ -1,3 +1,7 @@
+body {
+    background-image: url(../src/images/fond.png);
+}
+
 #inscription{
     width: 200px;
     height: 200px;
@@ -5,11 +9,11 @@
     font-family: "Comic Sans MS", serif;
     font-size: 1.5em;
     color: white;
-    background-color: rgb(159, 0, 0);
+    background-color: rgb(85, 0, 0);
     position: absolute;
     right: 0;
     left: 250px;
-    top: 400px;
+    top: 470px;
     margin-left: auto;
     margin-right: auto;
     align-items: center;
@@ -25,13 +29,13 @@
     font-family: "Comic Sans MS", serif;
     font-size: 1.5em;
     color: white;
-    background-color: rgb(159, 0, 0);
+    background-color: rgb(85, 0, 0);
     position: absolute;
     right: 250px;
     left: 0;
     margin-left: auto;
     margin-right: auto;
-    top: 400px;
+    top: 470px;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -41,7 +45,7 @@
     position: absolute;
     height: 300px;
     width: 200px;
-    border: 1rem solid rgb(33 , 70 , 126);
+    border: 1rem solid rgb(8, 28, 58);
     flex-direction: column;
     justify-content: center;
     align-items: center;
