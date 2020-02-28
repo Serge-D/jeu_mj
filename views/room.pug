@@ -1,18 +1,26 @@
 include includes/head.pug
 
-form#createRoom(action="/room" method="POST" name="fileinfo")
-    label(for="creer") Créer une partie
-    br
-    input(type="text" name="roomname" placeholder="Nom de la partie")
-    input(type="submit")
-
-form#startGame(action="/start" method="POST" name="fileinfo")
-    input(type="submit")
-
-//- div
-//-     p Parties en cours
+//- form#createRoom(action="/room" method="POST" name="fileinfo")
+//-     label(for="creer") Créer une partie
 //-     br
-//-     p Partie Une    
-//-         button Rejoindre
-    
+//-     input(type="text" name="roomname" placeholder="Nom de la partie")
+//-     input(type="submit")
+
+
+
+form#startGame(action="/game" method="POST" name="fileinfo")
+  div#formChoixDesRooms  
+    label(for='partie1') Partie 1
+    button#room1(type='button' name='room1') Joindre Partie 
+    label(for='partie2') Partie 2
+    button#room2(type='button' name='room2') Joindre Partie 
+    label(for='partie3') Partie 3
+    button#room3(type='button' name='room3') Joindre Partie 
+    label(for='partie4') Partie 4
+    button#room4(type='button' name='room4') Joindre Partie 
+    label(for='partie5') Partie 5
+    button#room5(type='button' name='room5') Joindre Partie     
+  input#boutonStart(type="submit" value="Rejoindre")
+
+script(src="/js/back.js")
 include includes/footer.pug

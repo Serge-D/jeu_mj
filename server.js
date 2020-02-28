@@ -41,7 +41,7 @@ const options = {
 app.use(expressSession(options));
 
 app.use(function (req, res, next) {
-    if (req.url == "/home" || req.url == "/auth") {
+    if (req.url == "/home" || req.url == "/inscription" || req.url == "/connexion") {
         next()
     } else {
         if (!req.session.userName) {
@@ -77,63 +77,134 @@ app.get("/", function (req, res) {
 
 })
 
-app.post("/auth", function (req, res) {
+
+/******************** INSCRIPTION ET CONNEXION *******************************/
+
+app.post("/inscription", function (req, res) {
     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
         if (err) {
-            console.log("erreur");
+            console.log("erreur")
         } else {
-
-            const uuid = uuidv1();
-
-
 
             // test si le joueur à saisie mdp et identifiant    
             if (req.body.identifiant === "" || req.body.mdp === "") {
                 res.render("home", { message: "Veuillez saisir les informations" });
-            };
-
-            let db = client.db("jeu_mj");
-            let collection = db.collection("utilisateurs");
-            let ident = req.body.identifiant;
-            let motDePasse = req.body.mdp;
-            let insertion = {};
-
-            collection.find({ pseudo: ident }).toArray(function (err, data) {
-                if (data.length) {
-
-                    // console.log("ici" + data);
-                    let user = data[0];
-                    // console.log(user);
-                    if (user.mdp === motDePasse) { // doit peut etre rajouter user.identifiant === ident
-                        req.session.userName = user.pseudo // => user values?
-                        req.session.authentification = true;
-                        // req.session.cookie.expires = cookieExpiration
-                        res.render("avatar", { mess: "Bienvenue " + req.session.userName });
-                        // req.session.pseudo
-                    } else {
-                        res.render("home", { message: "Identifiants incorrects / Identifiants déjà pris" });
-                    }
-                }
-                else {
-                    console.log("pseudo non trouvé")
-
-                    //Creation de la session du joueur
-                    req.session.uuid = uuid;
+            } else {
 
 
-                    //insertion du joueur dans la data base Utilisateurs
-                    insertion.pseudo = ident;
-                    insertion.mdp = motDePasse;
-                    insertion.uuid = uuid;
-                    collection.insertOne(insertion, function (err, results) {
-                        res.render("avatar", { mess: "Bienvenue " + ident });
-                    });
-                }
-            })
+                let db = client.db("jeu_mj");
+                let collection = db.collection("utilisateurs");
+                let ident = req.body.identifiant;
+                let motDePasse = req.body.mdp;
+                let insertion = {};
+                let uuid = uuidv1();
 
+                //Creation de la session du joueur
+                req.session.uuid = uuid;
+                req.session.authentification = true;
+                req.session.userName = ident;
+
+                //insertion du joueur dans la data base Utilisateurs
+                insertion.pseudo = ident;
+                insertion.mdp = motDePasse;
+                insertion.uuid = uuid;
+                collection.insertOne(insertion, function (err, results) {
+                    res.render("avatar", { mess: "Bienvenue " + ident });
+                });
+            }
         }
     })
 });
+
+app.post("/connexion", function (req, res) {
+    MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
+        if (err) {
+            console.log("erreur")
+        }
+        
+        let db = client.db("jeu_mj");
+        let collection = db.collection("utilisateurs");
+        let ident = req.body.identifiant;
+        let motDePasse = req.body.mdp;
+
+        collection.find({ pseudo: ident}).toArray(function (err, data) {
+            if (data.length) {
+                console.log(data)
+                let user = data[0]; // probleme si plusieurs personnes sont connectées le data[0] n'est plus bon ????? //semi réponse = si c'est ok si la session est ouverte
+
+                if (user.mdp === motDePasse && user.pseudo === ident) {
+                    req.session.userName = user.pseudo;
+                    req.session.authentification = true;
+                    res.render("avatar", { message: "Bienvenue " + req.session.userName })
+                } else {
+                    res.render("home", { message: "Identifiants incorrects" })
+                }
+            }
+        })
+    })
+});
+
+
+
+/*****************************************************************************/
+
+// app.post("/auth", function (req, res) {
+//     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
+//         if(err){
+//             console.log("erreur");
+//         }else{
+
+//         const uuid = uuidv1();
+
+
+
+//         // test si le joueur à saisie mdp et identifiant    
+//         if (req.body.identifiant === "" || req.body.mdp === "") {
+//             res.render("home", { message: "Veuillez saisir les informations" });
+//         };
+
+//         let db = client.db("jeu_mj");
+//         let collection = db.collection("utilisateurs");
+//         let ident = req.body.identifiant;
+//         let motDePasse = req.body.mdp;
+//         let insertion = {};
+
+//         collection.find({ pseudo: ident }).toArray(function (err, data) {
+//             if (data.length) {
+
+//                 // console.log("ici" + data);
+//                 let user = data[0];
+//                 // console.log(user);
+//                     if(user.mdp === motDePasse){ // doit peut etre rajouter user.identifiant === ident
+//                         req.session.userName = user.pseudo // => user values?
+//                         req.session.authentification = true;
+//                         // req.session.cookie.expires = cookieExpiration
+//                         res.render("avatar", { mess: "Bienvenue " + req.session.userName });
+//                         // req.session.pseudo
+//                     }else{
+//                         res.render("home", {message: "Identifiants incorrects / Identifiants déjà pris"});
+//                     }
+//             }
+//             else {
+//                 console.log("pseudo non trouvé")
+
+//                 //Creation de la session du joueur
+//                 req.session.uuid = uuid;
+
+
+//                 //insertion du joueur dans la data base Utilisateurs
+//                 insertion.pseudo = ident;
+//                 insertion.mdp = motDePasse;
+//                 insertion.uuid = uuid;
+//                 collection.insertOne(insertion, function (err, results) {
+//                     res.render("avatar", { mess: "Bienvenue " + ident });
+//                 });
+//             }
+//         })
+
+//     }
+//     })
+// });
 
 app.get("/avatar", function (req, res) {
     res.render("avatar", { mess: "Bienvenue " + req.session.userName });
@@ -184,61 +255,65 @@ app.get("/room", function (req, res) {
     res.render("room")
 })
 
-app.post("/room", function (req, res) {
-    console.log("RRRRRRRRRRRRRRRRRRRRR")
-    MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
-        if (err) {
-            console.log("erreur")
-        }
-        let db = client.db("jeu_mj");
-        let collection = db.collection("rooms");
-        console.log("-----")
-        console.log(req.body)
-        console.log("-----")
-        let nomDeLaPartie = req.body.roomname;
-        let insertion = {};
+// app.post("/room", function (req, res) {
+//     console.log("RRRRRRRRRRRRRRRRRRRRR")
+//     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
+//         if (err) {
+//             console.log("erreur")
+//         }
+//         let db = client.db("jeu_mj");
+//         let collection = db.collection("rooms");
+//         console.log("-----")
+//         console.log(req.body)
+//         console.log("-----")
+//         let nomDeLaPartie = req.body.roomname;
+//         let insertion = {};
 
-        collection.find({ nom: nomDeLaPartie }).toArray(function (err, data) {
-            if (!data.length) {
-                console.log("room inexistante");
-                insertion.uuid = uuidv1();
-                insertion.nom = nomDeLaPartie;
-                insertion.maxJoueur = 2;
-                insertion.minJoueur = 1;
-                insertion.nomDesJoueurs = [req.session.userName];
-                collection.insertOne(insertion, function (err, results) {
-                    console.log("room créée")
-                })
-            }
-        })
-    })
-})
+//         collection.find({ nom: nomDeLaPartie }).toArray(function (err, data) {
+//             if (!data.length) {
+//                 console.log("room inexistante");
+//                 insertion.uuid = uuidv1();
+//                 insertion.nom = nomDeLaPartie;
+//                 insertion.maxJoueur = 2;
+//                 insertion.minJoueur = 1;
+//                 insertion.nomDesJoueurs = [req.session.userName];
+//                 collection.insertOne(insertion, function (err, results) {
+//                     console.log("room créée")
+//                 })
+//             }
+//         })
+//     })
+// });
 
-
-app.post("/start", function(req, res){
-    res.render("jeu")
-})
 
 
 app.get("/jeu", function (req, res) {
-    console.log("ICI");
-    MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
-        let db = client.db("jeu_mj");
-        let collection = db.collection("questions");
-        collection.find().toArray(function (err, data) {
-            if (err) {
-                console.log("erreur");
-            } else {
+    res.render("jeu");
+    //     console.log("ICI");
+    //     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function(err, client){
+    //         let db = client.db("jeu_mj");
+    //         let collection = db.collection("questions");
+    //         collection.find().toArray(function(err, data){
+    //             if(err){
+    //                 console.log("erreur");
+    //             }else{
 
-                res.render("jeu", { present: req.session.userName, image: req.session.avatar, question: data[0] });
-            }
-        })
-    });
+    //                 res.render("jeu", {present:req.session.userName , image: req.session.avatar, question: data[0]});
+    //             }
+    //         })
+    //     });
 });
 
 
+app.post("/game", function(req, res){
+    // res.render("jeu", {present: req.session.userName, image: req.session.avatar})
+    res.redirect("/game")
+})
 
-
+app.get("/game", (req, res)=>{
+    res.render("jeu", {present: req.session.userName, image: req.session.avatar})
+    
+})
 
 
 
@@ -252,32 +327,22 @@ const io = require("socket.io");
 
 const webSocketServer = io(serverHTTP);
 
+var rooms = ["Lobby"];
 
 webSocketServer.on("connect", function (socket) {
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
 
     /********* Partie avec nico  ***********/
-    // socket.on("create_room", function(room){
-    //     // console.log(room)
-    //     rooms.push(room);
-    //     socket.emit("updaterooms", rooms, socket.room);
-    // });
-    /****************************************/
-
-
-    socket.on('create', function (room) {
-        // rooms.push(room)
-        socket.join("room1");
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        console.log(room.room)
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        // socket.to(room.room).emit("updaterooms", socket.room)
-        console.log(socket.adapter.rooms)
+    socket.on("create_room", function (room) {
+        // console.log(room)
+        rooms.push(room);
+        socket.join(room);
+        socket.emit("updaterooms", rooms, socket.room);
 
     });
 
-
+    console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
 
     // socket.on("questions", function(socketData){
     //     var questionsData = JSON.parse(socketData.utf8Data)
@@ -285,7 +350,7 @@ webSocketServer.on("connect", function (socket) {
     //         if(err){
     //             console.log("Cannot connect to database");
     //         }else{
-    //             let db = client .db("jeu_mj");
+    //             let db = client.db("jeu_mj");
     //             let collection = db.collection("questions");
     //             collection.find().toArray(function(err, data){
     //                 if(err){
@@ -311,15 +376,14 @@ webSocketServer.on("connect", function (socket) {
         socket.leave(socket.room);
     })
 
-
-
     socket.on("start", function (id, socketData) {
         console.log(socket.adapter.rooms)
         console.log("RECU EMIT START GAME")
         console.log("bbbbbbbbbbbbbbb")
         console.log(id)
         console.log("bbbbbbbbbbbbbbb")
-        var room = "room1"
+        // var room = "room1"  // Premiere version
+        var room = ["Partie 1","Partie 2","Partie 3","Partie 4","Partie 5"];
         MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
             console.log("MONGOCLIENT")
             if (err) {
@@ -332,53 +396,41 @@ webSocketServer.on("connect", function (socket) {
                         console.log("impossible d'acceder a la collection")
                     } else {
                         var questions = data
+                        console.log(data)
                         console.log("YAQUOI")
                         var i = 0
+                        console.log(i)
+                        var question = questions[0]
+                        var response = Object.assign({}, questions[0]);
+                        delete question["réponse"]
+                        delete question.anecdote
+                        // console.log(question)
+                        // console.log(response)
+                        // socket.to(room).emit('questions', question)
+                        // socket.to(room).emit('questions', response)
+                        var testInterval = setInterval(() => {
                             console.log(i)
-                            let question = questions[0]
-                            let response = Object.assign({}, questions[0]);
-                            delete question["réponse"]
-                            delete question.anecdote
-                            // console.log(question)
-                            // console.log(response)
-                            // socket.to(room).emit('questions', question)
-                            // socket.to(room).emit('questions', response)
-                            var testInterval = setInterval(() => {
-                                console.log(i)
-                                if (i>=10){
-                                    clearInterval(testInterval)
-                                    clearTimeout(testTimeout)
-                                    return
-                                }
-                                console.log("emit quesion", room, question)
-                                socket.in(room).emit('questions', question)
+                            if (i >= 10) {
+                                clearInterval(testInterval)
+                                clearTimeout(testTimeout)
+                                return
+                            }
+                            console.log("emit question", room[0], question)
+                            socket.emit('questions', question)
 
-                                var testTimeout = setTimeout(() => {
-                                    console.log("emit response", room, response)
-                                    socket.to(room).emit('questions', response)
-                                }, 3000)
-                                i++
-                            }, 6000);
-                        
+                            var testTimeout = setTimeout(() => {
+                                console.log("emit response", room[0], response)
+                                socket.to(room[0]).emit('questions', response)
+                            }, 3000)
+                            i++
+                        }, 6000);
+
                     }
                 });
             }
         });
         console.log("YAQUOI")
-        
-
-
-
-
-        // var questionsData = JSON.parse(socketData.utf8Data)
-
-
-        // const questionsDataAsString = JSON.stringify(questionsData);
-        // establishedSockets.forEach(function (socket) {
-        //   socket.sendUTF(questionsDataAsString);
-        // });
-
-    })
+    });
 });
     // /******* Autre facon de faire
     // // socket.on("connexion", function(socket){
@@ -404,4 +456,24 @@ webSocketServer.on("connect", function (socket) {
     // /********** autre facon de faire encore ********/
     // // socket.on('create', function(room) {
     // //     socket.join(room);});
-    // //   
+
+/*
+/////Récuperation questions
+
+MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,client)=>{
+    if(err){
+        console.log("Impossible d'acceder la base de données")
+    }else{
+        let db = client.db("jeu_mj");
+        let collection = db.collection("questions");
+        collection.find({}).toArray((err, data)=>{
+            if(err){
+                console.log("erreur récuperation");
+            }else{
+                questions = data
+            }
+        })
+    }
+})
+
+*/

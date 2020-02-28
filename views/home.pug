@@ -1,21 +1,52 @@
 include includes/head.pug
 
 
+#inscription INSCRIPTION
+
+#connexion CONNEXION
+
+#formInscription
+  form(action='/inscription' method='POST')
+    label(for='name') Nom
+    br
+    input(type='text' name='identifiant')
+    br
+    label(for='mdp') Mot de passe
+    br
+    input(type='password' name='mdp')
+    br
+    input(type='submit' value='Valider')
+
+    p= message
 
 
-form#formulaire(action='/auth' method='post')
-    fieldset#bordure
-        label(for='name') Nom
-        br 
-        input#nameJ1(type='text' name='identifiant')
-        br
-        label(for='mdp') Mot de passe
-        br
-        input#mdp(type='password' name= 'mdp')
-        br
-        input(type='submit' value='Jouer')
-p= message
+#formConnexion
+  form(action='/connexion' method='POST')
+    label(for='name') Nom
+    br
+    input(type='text' name='identifiant')
+    br
+    label(for='mdp') Mot de passe
+    br
+    input(type='password' name='mdp')
+    br
+    input(type='submit' value='Valider')
+
+    p= message
+
+//- form#formulaire(action='/auth' method='post')
+//-     fieldset#bordure
+//-         label(for='name') Nom
+//-         br 
+//-         input#nameJ1(type='text' name='identifiant')
+//-         br
+//-         label(for='mdp') Mot de passe
+//-         br
+//-         input#mdp(type='password' name= 'mdp')
+//-         br
+//-         input(type='submit' value='Jouer')
+//- p= message
 
 
-
+script(src="/js/backHome.js")
 include includes/footer.pug

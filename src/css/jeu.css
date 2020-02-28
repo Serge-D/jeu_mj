@@ -1,5 +1,8 @@
 body {
     background-image: url(../images/fond.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+
 }
 
 /* header */
@@ -8,25 +11,91 @@ h1 {
     color: black;
     text-align: center;
     margin-block-start: 0;
-}
-
-
-ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    list-style-type: none;
-    
-}
-
-a{
-    text-decoration: none;
-    font-size: 25px;
-    font-family: 'Comic Sans MS',serif;
-    color: black;
+    font-size: 2.8em;
 }
 
 /* section */
+
+p {
+    font-family: 'Comic Sans MS',serif;
+    font-size: 1.4em;
+}
+
+#formInscription label {
+    font-size: 30px;
+    color: white;
+}
+
+#formConnexion label {
+    font-size: 30px;
+    color: white;
+}
+
+#inscription{
+    width: 200px;
+    height: 200px;
+    border-radius: 125px;
+    font-family: "Comic Sans MS", serif;
+    font-size: 1.5em;
+    color: white;
+    background-color: rgb(85, 0, 0);
+    position: absolute;
+    right: 0;
+    left: 250px;
+    top: 470px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+}
+
+#connexion{
+    width: 200px;
+    height: 200px;
+    border-radius: 125px;
+    font-family: "Comic Sans MS", serif;
+    font-size: 1.5em;
+    color: white;
+    background-color: rgb(85, 0, 0);
+    position: absolute;
+    right: 250px;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: 470px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+#formInscription, #formConnexion{
+    position: absolute;
+    height: 300px;
+    width: 200px;
+    border: 1rem solid rgb(8, 28, 58);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 200px;
+    right: 0;
+    left:0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+#formChoixDesRooms{
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    font-family: 'Comic Sans MS',serif;
+    font-size: 1.1em;
+    color: yellowgreen;
+}
+
 
 #formulaire {
     text-align: center;
@@ -141,6 +210,19 @@ a{
     margin-right: auto;
     margin-left: auto;
     margin-top: 40px;
+}
+
+#boutonStart{
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    border: 2px solid black;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-right: auto;
+    margin-left: auto;
+    top: 400px;
 }
 
 

@@ -3,19 +3,23 @@ include includes/head.pug
 
 p=present
 img#avatarfinal(src=image alt='')
+p Score : 
+  span#score1 0
+
+input#bouttonStart(type="button")
 
 section
   #fenetreDeJeu
     //- #numQuestion=question.id
-    #theme=question.theme
-    #question=question.question
-    #reponseA=question.propositions[0]
-    #reponseB=question.propositions[1]
-    #reponseC=question.propositions[2]
-    #reponseD=question.propositions[3]
-    #responseFinal=question.reponse
-    #anecdote=question.anecdote
+    #theme
+    #question
+    #reponseA
+    #reponseB
+    #reponseC
+    #reponseD
+    #responseFinale
+    #anecdote
 
 
-
+script(src="/js/back.js")
 include includes/footer.pug    
