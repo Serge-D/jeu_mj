@@ -53,12 +53,14 @@ ioClient.on("updaterooms", function(rooms){
     // console.log(rooms);
 })
 console.log(bouttonStart)
+
+if(bouttonStart){
 bouttonStart.addEventListener("click", function(event){
     console.log("ahahaahahah")
     event.preventDefault();
     ioClient.emit("start");
 })
-    
+}    
 
 // formRoom.addEventListener("submit", (event)=>{
 //     event.preventDefault()
@@ -66,6 +68,7 @@ bouttonStart.addEventListener("click", function(event){
 //     console.log(event, formData)
 //     ioClient.emit('create', {room: formData})
 // })
+
 
 startGame.addEventListener("submit", (event)=>{
     event.preventDefault();
