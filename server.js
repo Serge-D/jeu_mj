@@ -108,7 +108,9 @@ app.post("/inscription", function (req, res) {
                 insertion.pseudo = ident;
                 insertion.mdp = motDePasse;
                 insertion.uuid = uuid;
+                insertion.score = [];
                 collection.insertOne(insertion, function (err, results) {
+                    res.cookie("user_id", uuid, { expires: new Date(Date.now() + 900000), httpOnly: false })
                     res.render("avatar", { mess: "Bienvenue " + ident });
                 });
             }
@@ -135,6 +137,8 @@ app.post("/connexion", function (req, res) {
                 if (user.mdp === motDePasse && user.pseudo === ident) {
                     req.session.userName = user.pseudo;
                     req.session.authentification = true;
+                    res.cookie("user_id", user.uuid, { expires: new Date(Date.now() + 900000), httpOnly: false })
+
                     res.render("avatar", { message: "Bienvenue " + req.session.userName })
                 } else {
                     res.render("home", { message: "Identifiants incorrects" })
@@ -326,22 +330,35 @@ const serverHTTP = app.listen(8080, function () {
 const io = require("socket.io");
 
 const webSocketServer = io(serverHTTP);
-
+console.log(webSocketServer.nsps['/'].adapter.rooms)
 var rooms = ["Lobby"];
-
+console.log(io)
 webSocketServer.on("connect", function (socket) {
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
 
     /********* Partie avec nico  ***********/
     socket.on("create_room", function (room) {
-        // console.log(room)
-        rooms.push(room);
-        socket.join(room);
-        socket.emit("updaterooms", rooms, socket.room);
+        MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
+            console.log("MONGOCLIENT")
+            if (err) {
+                console.log("Cannot connect to database");
+            } else {
+                // let db = client.db("jeu_mj");
+                // let collection = db.collection("questions");
+                // collection.find().toArray(function (err, data) {    
+                console.log(room)
+                socket.join(room);
+                // })
+            }
+        })
+        // socket.emit("updaterooms", rooms, socket.room);
 
     });
+    socket.on("join_room", (room)=>{
 
+        socket.join(room)
+    })
     console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
 
     // socket.on("questions", function(socketData){
@@ -376,14 +393,16 @@ webSocketServer.on("connect", function (socket) {
         socket.leave(socket.room);
     })
 
-    socket.on("start", function (id, socketData) {
+    socket.on("start", function (room) {
         console.log(socket.adapter.rooms)
         console.log("RECU EMIT START GAME")
+        console.log("room", room)
+        console.log(webSocketServer.nsps['/'].adapter.rooms)
         console.log("bbbbbbbbbbbbbbb")
-        console.log(id)
         console.log("bbbbbbbbbbbbbbb")
+        socket.join(room)
         // var room = "room1"  // Premiere version
-        var room = ["Partie 1","Partie 2","Partie 3","Partie 4","Partie 5"];
+        // var room = ["Partie 1","Partie 2","Partie 3","Partie 4","Partie 5"];
         MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
             console.log("MONGOCLIENT")
             if (err) {
@@ -396,31 +415,38 @@ webSocketServer.on("connect", function (socket) {
                         console.log("impossible d'acceder a la collection")
                     } else {
                         var questions = data
-                        console.log(data)
-                        console.log("YAQUOI")
+                        // console.log(data)
+                        // console.log("YAQUOI")
                         var i = 0
+                        console.log("------")
                         console.log(i)
-                        var question = questions[0]
-                        var response = Object.assign({}, questions[0]);
-                        delete question["réponse"]
-                        delete question.anecdote
+                        console.log("------")
+                        
+                        
                         // console.log(question)
                         // console.log(response)
                         // socket.to(room).emit('questions', question)
                         // socket.to(room).emit('questions', response)
                         var testInterval = setInterval(() => {
+                            var question = questions[i]
+                            var response = Object.assign({}, questions[i]);
+                            delete question["reponse"]
+                            delete question.anecdote
+                            console.log(socket)
+
                             console.log(i)
+                            console.log(questions[i])
                             if (i >= 10) {
                                 clearInterval(testInterval)
                                 clearTimeout(testTimeout)
                                 return
                             }
-                            console.log("emit question", room[0], question)
-                            socket.emit('questions', question)
+                            console.log("emit question", room, question)
+                            webSocketServer.sockets.in(room).emit('questions', question)
 
                             var testTimeout = setTimeout(() => {
-                                console.log("emit response", room[0], response)
-                                socket.to(room[0]).emit('questions', response)
+                                console.log("emit response", room, response)
+                                webSocketServer.sockets.in(room).emit('response', response)
                             }, 3000)
                             i++
                         }, 6000);

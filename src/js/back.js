@@ -1,6 +1,7 @@
 "use strict"
 
 
+console.log("prout")
 
 var theme = window.document.getElementById("theme");
 var question = window.document.getElementById("question");
@@ -18,26 +19,34 @@ var buttonInscription = document.getElementById("inscription");
 var formInscription = document.getElementById("formInscription");
 var formConnexion = document.getElementById("formConnexion");
 var bouttonStart = document.getElementById("bouttonStart");
+var boutonStart = document.getElementById("boutonStart");
 
 // formConnexion.style.display ="none";
 // formInscription.style.display ="none";
 
 console.log(bouttonStart)
-
-
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 window.addEventListener("DOMContentLoaded", function(){
-// buttonConnexion.addEventListener("click", function(){
-//     buttonConnexion.style.display = "none";
-//     buttonInscription.style.display = "none";
-//     formConnexion.style.display = "flex";
-// })
-
-
-// buttonInscription.addEventListener("click", function(){
-//     buttonConnexion.style.display = "none";
-//     buttonInscription.style.display = "none";
-//     formInscription.style.display = "flex";
-// })  
 
 
 
@@ -58,7 +67,7 @@ if(bouttonStart){
 bouttonStart.addEventListener("click", function(event){
     console.log("ahahaahahah")
     event.preventDefault();
-    ioClient.emit("start");
+    ioClient.emit("start", getCookie("room"));
 })
 }    
 
@@ -70,30 +79,59 @@ bouttonStart.addEventListener("click", function(event){
 // })
 
 
-startGame.addEventListener("submit", (event)=>{
-    event.preventDefault();
-    ioClient.emit('start')
-    console.log(questionPosée)
-});
+// startGame.addEventListener("submit", (event)=>{
+//     event.preventDefault();
+//     ioClient.emit('create_room', 'azeazeae')
+    
+//     console.log(questionPosée)
+// });
+if(boutonStart){
+
+    boutonStart.addEventListener("click", (event)=>{
+                // event.preventDefault();
+
+        console.log("room azeaeazeaea")
+        var roomName = document.getElementById("roomName").value
+    
+        console.log(roomName)
+    
+        setCookie("room", roomName)
+    
+        ioClient.emit('create_room', roomName)
+        
+        console.log(questionPosée)
+    });
+}
 
 var questionPosée = function(questions){
-    theme.text(questions.theme);
-    question.text(questions.question);
-    reponseA.text(questions.propositions[0]);
-    reponseB.text(questions.propositions[1]);
-    reponseC.text(questions.propositions[2]);
-    reponseD.text(questions.propositions[3]);
-    reponseFinale.text(questions.réponse);
-    anecdote.text(questions.anecdote);          
+
+    console.log(theme);
+    theme.innerHTML= questions.theme;
+    question.innerHTML= questions.question;
+    reponseA.innerHTML= questions.propositions[0];
+    reponseB.innerHTML= questions.propositions[1];
+    reponseC.innerHTML= questions.propositions[2];
+    reponseD.innerHTML= questions.propositions[3];         
+}
+
+var reponsePosée = function(questions){
+    
+    reponseFinale.innerHTML = questions.reponse;
+    anecdote.innerHTML = questions.anecdote;
 }
 
 console.log(questionPosée)
 
-ioClient.on("questions", function(questions){
-    console.log(questions)
-    
+ioClient.on("questions", function(question){
+    console.log(question)
+    questionPosée(question)
+  
 })
 
+ioClient.on("response", function(response){
+    console.log(response)
+    reponsePosée(response);
+})
 
 
 
