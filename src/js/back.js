@@ -11,7 +11,6 @@ var reponseC = window.document.getElementById("reponseC");
 var reponseD = window.document.getElementById("reponseD");
 var reponseFinale = window.document.getElementById("reponseFinale")
 var anecdote = window.document.getElementById("anecdote");
-// var formRoom = window.document.getElementById("createRoom");
 var startGame = window.document.getElementById("startGame");
 var fenetreDeJeu = window.document.getElementById("fenetreDeJeu");
 var buttonConnexion = document.getElementById("connexion");
@@ -21,8 +20,6 @@ var formConnexion = document.getElementById("formConnexion");
 var bouttonStart = document.getElementById("bouttonStart");
 var boutonStart = document.getElementById("boutonStart");
 
-// formConnexion.style.display ="none";
-// formInscription.style.display ="none";
 
 console.log(bouttonStart)
 function getCookie(cname) {
@@ -71,20 +68,7 @@ bouttonStart.addEventListener("click", function(event){
 })
 }    
 
-// formRoom.addEventListener("submit", (event)=>{
-//     event.preventDefault()
-//     var formData = {room: formRoom.elements[0].value}
-//     console.log(event, formData)
-//     ioClient.emit('create', {room: formData})
-// })
 
-
-// startGame.addEventListener("submit", (event)=>{
-//     event.preventDefault();
-//     ioClient.emit('create_room', 'azeazeae')
-    
-//     console.log(questionPosée)
-// });
 if(boutonStart){
 
     boutonStart.addEventListener("click", (event)=>{
@@ -134,6 +118,24 @@ ioClient.on("response", function(response){
 })
 
 
+reponseA.addEventListener("click", function(){
+    
+})
+
+
+reponseB.addEventListener("click", function(){
+
+})
+
+
+reponseC.addEventListener("click", function(){
+
+})
+
+
+reponseD.addEventListener("click", function(){
+    
+})
 
 
 
@@ -141,25 +143,6 @@ ioClient.on("response", function(response){
 
 
 
-// function switchRoom(room){
-//     socket.emit("switchRoom", room)
-// }
-
-// ioClient.emit('create', "room1");
-// console.log("room1")
-
-/******** methode pour changer les questions *******/
-
-// ioClient.on("questions", function(event){
-//     setTimeout(() => {
-//         var questionsData = JSON.parse(event.data);
-//         console.log(questionsData);
-        
-        
-        
-//         ioClient.send()
-//     }, 30000);
-// });
 
 
 
