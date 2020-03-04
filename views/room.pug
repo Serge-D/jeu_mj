@@ -8,21 +8,22 @@ include includes/head.pug
 
 
 form(action="/game" method="POST" name="partie 1")
-  label(for='partie1')  Partie 1 
-  input#partieUne(type='submit' value='Rejoindre')
+  //- label(for='partie1')  Partie 1 
+  input#partieUne(type='submit' value='Partie Une')
 form(action="/game" method="POST" name="partie 2")
-  label(for='partie2')  Partie 2 
-  input#partieDeux(type='submit' value='Rejoindre')
+  //- label(for='partie2')  Partie 2 
+  input#partieDeux(type='submit' value='Partie Deux')
 form(action="/game" method="POST" name="partie 3")
-  label(for='partie3')  Partie 3 
-  input#partieTrois(type='submit' value='Rejoindre')
+  //- label(for='partie3')  Partie 3 
+  input#partieTrois(type='submit' value='Partie Trois')
 form(action="/game" method="POST" name="partie 4")
-  label(for='partie4')  Partie 4 
-  input#partieQuatre(type='submit' value='Rejoindre')
+  //- label(for='partie4')  Partie 4 
+  input#partieQuatre(type='submit' value='Partie Quatre')
 form(action="/game" method="POST" name="partie 5")
-  label(for='partie5')  Partie 5
-  input#partieCinq(type='submit' value='Rejoindre')
+  //- label(for='partie5')  Partie 5
+  input#partieCinq(type='submit' value='Partie Cinq')
 form#startGame(action="/game" method="POST" name="fileinfo")
+  label(for="partie perso") Partie Personnalisé
   input#roomName(type="text")  
   input#boutonStart(type="submit" value="Rejoindre")
 

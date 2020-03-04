@@ -97,6 +97,12 @@ p {
 }
 
 
+#joueurs{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 #formulaire {
     text-align: center;
     margin-top: 200px;
@@ -147,7 +153,7 @@ p {
     border: 2px solid green;
     border-radius: 10px;
     font-size: 2.1em;
-    margin-top: 50px;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;

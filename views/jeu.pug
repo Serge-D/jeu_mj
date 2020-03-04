@@ -1,16 +1,22 @@
 include includes/head.pug
 
-
-p=present
-img#avatarfinal(src=image alt='')
-p Score : 
-  span#score1 0
+div#joueurs
+  div#joueur1
+    p=present
+    img#avatarfinal(src=image alt='')
+    p Score : 
+      span#score1 0
+  //- div#joueur2
+  //-   p=present
+  //-   img#avatarfinal(src=image alt='')
+  //-   p Score : 
+  //-     span#score2 0
 
 input#bouttonStart(type="button" value="Jouer") 
 
 section
   #fenetreDeJeu
-    //- #numQuestion=question.id
+    #numQuestion
     #theme
     #question
     #reponseA

@@ -1,6 +1,7 @@
 "use strict"
 
 
+
 console.log("prout")
 
 var theme = window.document.getElementById("theme");
@@ -43,6 +44,8 @@ function setCookie(cname, cvalue, exdays) {
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
+
+
 window.addEventListener("DOMContentLoaded", function(){
 
 
@@ -87,10 +90,78 @@ if(boutonStart){
     });
 }
 
+if(partieUne){
+
+    partieUne.addEventListener("click", (event)=>{
+        console.log("room Partie une");
+        var roomName = document.getElementById("partieUne").value
+        console.log(roomName);
+        setCookie("room", roomName)
+
+        ioClient.emit("create_room", roomName);
+        console.log(questionPosée)
+    })
+}
+
+if(partieDeux){
+
+    partieDeux.addEventListener("click", (event)=>{
+        console.log("room Partie Deux");
+        var roomName = document.getElementById("partieDeux").value
+        console.log(roomName);
+        setCookie("room", roomName)
+
+        ioClient.emit("create_room", roomName);
+        console.log(questionPosée)
+    })
+}
+
+
+if(partieTrois){
+
+    partieTrois.addEventListener("click", (event)=>{
+        console.log("room Partie Trois");
+        var roomName = document.getElementById("partieTrois").value
+        console.log(roomName);
+        setCookie("room", roomName)
+
+        ioClient.emit("create_room", roomName);
+        console.log(questionPosée)
+    })
+}
+
+if(partieQuatre){
+
+    partieQuatre.addEventListener("click", (event)=>{
+        console.log("room Partie Quatre");
+        var roomName = document.getElementById("partieQuatre").value
+        console.log(roomName);
+        setCookie("room", roomName)
+
+        ioClient.emit("create_room", roomName);
+        console.log(questionPosée)
+    })
+}
+
+if(partieCinq){
+
+    partieCinq.addEventListener("click", (event)=>{
+        console.log("room Partie Cinq");
+        var roomName = document.getElementById("partieCinq").value
+        console.log(roomName);
+        setCookie("room", roomName)
+
+        ioClient.emit("create_room", roomName);
+        console.log(questionPosée)
+    })
+}
+
+
 var questionPosée = function(questions){
 
     console.log(theme);
     theme.innerHTML= questions.theme;
+    numQuestion.innerHTML=questions.id
     question.innerHTML= questions.question;
     reponseA.innerHTML= questions.propositions[0];
     reponseB.innerHTML= questions.propositions[1];
@@ -119,22 +190,22 @@ ioClient.on("response", function(response){
 
 
 reponseA.addEventListener("click", function(){
-    
+    ioClient.emit(reponseA.innerHTML, numQuestion, )
 })
 
 
 reponseB.addEventListener("click", function(){
-
+    ioClient.emit()
 })
 
 
 reponseC.addEventListener("click", function(){
-
+    ioClient.emit()
 })
 
 
 reponseD.addEventListener("click", function(){
-    
+    ioClient.emit()
 })
 
 
