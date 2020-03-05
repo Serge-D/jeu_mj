@@ -89,18 +89,18 @@ if(boutonStart){
     });
 }
 
-// if(partieUne){
+if(partieUne){
 
-//     partieUne.addEventListener("click", (event)=>{
-//         console.log("room Partie une");
-//         var roomName = document.getElementById("partieUne").value
-//         console.log(roomName);
-//         setCookie("room", roomName)
+    partieUne.addEventListener("click", (event)=>{
+        console.log("room Partie une");
+        var roomName = document.getElementById("partieUne").value
+        console.log(roomName);
+        setCookie("room", roomName)
 
-//         ioClient.emit("create_room", roomName);
-//         console.log(questionPosée)
-//     })
-// }
+        ioClient.emit("create_room", roomName);
+        console.log(questionPosée)
+    })
+}
 
 // if(partieDeux){
 
@@ -200,8 +200,7 @@ ioClient.on("response", function(response){
 reponseA.addEventListener("click", function(){
     console.log("AHAHAHAHAHAHAHAAH")
     console.log(reponseA.innerHTML)
-    console.log(numQuestion.innerHTML)
-    console.log(room)
+    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
     console.log("AGAGAGAGAGAGAGAAGAG")
 
     //Faut-il mettre ca dans un set interval comme on a fait partie server
