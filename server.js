@@ -85,9 +85,7 @@ app.get("/", function (req, res) {
 /******************** INSCRIPTION ET CONNEXION *******************************/
 
 app.post("/inscription", function (req, res) {
-    MongoClient.connect("mongodb://localhost:27017", {
-        useUnifiedTopology: true
-    }, function (err, client) {
+    MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
         if (err) {
             console.log("erreur")
         } else {
@@ -132,9 +130,7 @@ app.post("/inscription", function (req, res) {
 });
 
 app.post("/connexion", function (req, res) {
-    MongoClient.connect("mongodb://localhost:27017", {
-        useUnifiedTopology: true
-    }, function (err, client) {
+    MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
         if (err) {
             console.log("erreur")
         }
@@ -144,9 +140,7 @@ app.post("/connexion", function (req, res) {
         let ident = req.body.identifiant;
         let motDePasse = req.body.mdp;
 
-        collection.find({
-            pseudo: ident
-        }).toArray(function (err, data) {
+        collection.find({pseudo: ident}).toArray(function (err, data){
             if (data.length) {
                 console.log(data)
                 let user = data[0]; // probleme si plusieurs personnes sont connectées le data[0] n'est plus bon ????? //semi réponse = si c'est ok si la session est ouverte

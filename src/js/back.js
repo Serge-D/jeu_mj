@@ -1,7 +1,6 @@
 "use strict"
 
 
-
 console.log("prout")
 
 var theme = window.document.getElementById("theme");
@@ -90,76 +89,75 @@ if(boutonStart){
     });
 }
 
-if(partieUne){
+// if(partieUne){
 
-    partieUne.addEventListener("click", (event)=>{
-        console.log("room Partie une");
-        var roomName = document.getElementById("partieUne").value
-        console.log(roomName);
-        setCookie("room", roomName)
+//     partieUne.addEventListener("click", (event)=>{
+//         console.log("room Partie une");
+//         var roomName = document.getElementById("partieUne").value
+//         console.log(roomName);
+//         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
-    })
-}
+//         ioClient.emit("create_room", roomName);
+//         console.log(questionPosée)
+//     })
+// }
 
-if(partieDeux){
+// if(partieDeux){
 
-    partieDeux.addEventListener("click", (event)=>{
-        console.log("room Partie Deux");
-        var roomName = document.getElementById("partieDeux").value
-        console.log(roomName);
-        setCookie("room", roomName)
+//     partieDeux.addEventListener("click", (event)=>{
+//         console.log("room Partie Deux");
+//         var roomName = document.getElementById("partieDeux").value
+//         console.log(roomName);
+//         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
-    })
-}
+//         ioClient.emit("create_room", roomName);
+//         console.log(questionPosée)
+//     })
+// }
 
 
-if(partieTrois){
+// if(partieTrois){
 
-    partieTrois.addEventListener("click", (event)=>{
-        console.log("room Partie Trois");
-        var roomName = document.getElementById("partieTrois").value
-        console.log(roomName);
-        setCookie("room", roomName)
+//     partieTrois.addEventListener("click", (event)=>{
+//         console.log("room Partie Trois");
+//         var roomName = document.getElementById("partieTrois").value
+//         console.log(roomName);
+//         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
-    })
-}
+//         ioClient.emit("create_room", roomName);
+//         console.log(questionPosée)
+//     })
+// }
 
-if(partieQuatre){
+// if(partieQuatre){
 
-    partieQuatre.addEventListener("click", (event)=>{
-        console.log("room Partie Quatre");
-        var roomName = document.getElementById("partieQuatre").value
-        console.log(roomName);
-        setCookie("room", roomName)
+//     partieQuatre.addEventListener("click", (event)=>{
+//         console.log("room Partie Quatre");
+//         var roomName = document.getElementById("partieQuatre").value
+//         console.log(roomName);
+//         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
-    })
-}
+//         ioClient.emit("create_room", roomName);
+//         console.log(questionPosée)
+//     })
+// }
 
-if(partieCinq){
+// if(partieCinq){
 
-    partieCinq.addEventListener("click", (event)=>{
-        console.log("room Partie Cinq");
-        var roomName = document.getElementById("partieCinq").value
-        console.log(roomName);
-        setCookie("room", roomName)
+//     partieCinq.addEventListener("click", (event)=>{
+//         console.log("room Partie Cinq");
+//         var roomName = document.getElementById("partieCinq").value
+//         console.log(roomName);
+//         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
-    })
-}
+//         ioClient.emit("create_room", roomName);
+//         console.log(questionPosée)
+//     })
+// }
 
 
 var questionPosée = function(questions){
 
-    console.log(theme);
     theme.innerHTML= questions.theme;
     numQuestion.innerHTML=questions.id
     question.innerHTML= questions.question;
@@ -178,34 +176,75 @@ var reponsePosée = function(questions){
 console.log(questionPosée)
 
 ioClient.on("questions", function(question){
-    console.log(question)
+    // console.log(question)
     questionPosée(question)
-  
+    reponseA.style.backgroundColor = "unset";
+    reponseB.style.backgroundColor = "unset";
+    reponseC.style.backgroundColor = "unset";
+    reponseD.style.backgroundColor = "unset";
+    reponseA.disabled = false;
+    reponseB.disabled = false;
+    reponseC.disabled = false;
+    reponseD.disabled = false;
+    reponseFinale.innerHTML = "";
+    anecdote.innerHTML = "";
 })
 
 ioClient.on("response", function(response){
-    console.log(response)
+    // console.log(response)
     reponsePosée(response);
+   
 })
 
 
 reponseA.addEventListener("click", function(){
-    ioClient.emit(reponseA.innerHTML, numQuestion, )
+    console.log("AHAHAHAHAHAHAHAAH")
+    console.log(reponseA.innerHTML)
+    console.log(numQuestion.innerHTML)
+    console.log(room)
+    console.log("AGAGAGAGAGAGAGAAGAG")
+
+    //Faut-il mettre ca dans un set interval comme on a fait partie server
+    reponseA.style.backgroundColor = "goldenrod"; 
+    if(reponseA.style.backgroundColor == "goldenrod"){
+        reponseB.disabled = true;
+        reponseC.disabled = true;
+        reponseD.disabled = true;
+    }
+    // ioClient.emit(reponseA.innerHTML, numQuestion.innerHTML, )
 })
 
 
 reponseB.addEventListener("click", function(){
+    reponseB.style.backgroundColor = "goldenrod"; 
+    if(reponseB.style.backgroundColor == "goldenrod"){
+        reponseA.disabled = true;
+        reponseC.disabled = true;
+        reponseD.disabled = true;
+    }
     ioClient.emit()
 })
 
 
 reponseC.addEventListener("click", function(){
+    reponseC.style.backgroundColor = "goldenrod"; 
+    if(reponseC.style.backgroundColor == "goldenrod"){
+        reponseB.disabled = true;
+        reponseA.disabled = true;
+        reponseD.disabled = true;
+    }
     ioClient.emit()
 })
 
 
 reponseD.addEventListener("click", function(){
-    ioClient.emit()
+    reponseD.style.backgroundColor = "goldenrod"; 
+    if(reponseD.style.backgroundColor == "goldenrod"){
+        reponseB.disabled = true;
+        reponseC.disabled = true;
+        reponseA.disabled = true;
+    }
+//     ioClient.emit()
 })
 
 
