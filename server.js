@@ -58,6 +58,8 @@ app.use(function (req, res, next) {
 
 );
 
+
+
 app.get("/home", function (req, res) {
     res.render("home");
 })
@@ -252,6 +254,14 @@ webSocketServer.on("connect", function (socket) {
     })
     console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
 
+    
+    //fonction pour generer des chiffres aléatoires pour generer des numéros de questions aléatoire entre 0 et 49
+
+    function getRandomNumber(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
 
 
@@ -264,9 +274,7 @@ webSocketServer.on("connect", function (socket) {
         console.log("bbbbbbbbbbbbbbb")
         socket.join(room)
    
-        MongoClient.connect("mongodb://localhost:27017", {
-            useUnifiedTopology: true
-        }, function (err, client) {
+        MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
             console.log("MONGOCLIENT")
             if (err) {
                 console.log("Cannot connect to database");
@@ -318,6 +326,11 @@ webSocketServer.on("connect", function (socket) {
 
  
 
+    socket.on("reponses", function(){
+
+    })
+
+
 
     // /**** partie pour quitter la room *****/ 
     socket.on("disconnect", function () {
@@ -327,3 +340,42 @@ webSocketServer.on("connect", function (socket) {
 
 });
 
+
+/**** fonction pour enregistrer les scores
+ 
+ MongoClient.connect("mongodb://localhost:27017",{useUnifiedTopology: true}, function (err, client){
+  if(err){
+    console.log("impossible de se connecter à la base de données")
+    }else{
+        let db = client.db("jeu_mj");
+        let collection = db.collection("scores");
+        let insertion = {};
+
+        identifiant = req.session.userName;
+        score
+    }
+ })
+ 
+ ****/
+/* 
+MongoClient.connect("mongodb://localhost:27017",{useUnifiedTopology: true}, function (err, client){
+  if(err){
+    console.log("impossible de se connecter à la base de données")
+    }else{
+        let db = client.db("jeu_mj");
+        let collection = db.collection("questions");
+        numQuestion;
+        collection.find({numQuestion = id}).toArray(function(err,data){
+            if(err){
+                console.log("id introuvable")
+            }else{
+                if(data.reponse == reponseA ){
+                    
+                }
+            }
+        })
+
+
+
+
+*/ 
