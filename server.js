@@ -223,42 +223,41 @@ const io = require("socket.io");
 const webSocketServer = io(serverHTTP);
 console.log(webSocketServer.nsps['/'].adapter.rooms)
 var rooms = ["Lobby"];
-console.log(io)
+
 webSocketServer.on("connect", function (socket) {
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
 
-    /********* Partie avec nico  ***********/
+  
     socket.on("create_room", function (room) {
-        MongoClient.connect("mongodb://localhost:27017", {
-            useUnifiedTopology: true
-        }, function (err, client) {
+        MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
             console.log("MONGOCLIENT")
             if (err) {
                 console.log("Cannot connect to database");
-            } else {
-                // let db = client.db("jeu_mj");
-                // let collection = db.collection("questions");
-                // collection.find().toArray(function (err, data) {    
+            } else {  
                 console.log(room)
                 socket.join(room);
-                // })
+                
             }
         })
-        // socket.emit("updaterooms", rooms, socket.room);
+        socket.emit("updaterooms", rooms, socket.rooms);
 
+        console.log("TACHATTE")
+        console.log(socket.rooms)
     });
-    socket.on("join_room", (room) => {
+   
+   
+    // socket.on("join_room", (room) => {
 
-        socket.join(room)
-    })
-    console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
+    //     socket.join(room)
+    // })
+    // console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
 
     
     //fonction pour generer des chiffres aléatoires pour generer des numéros de questions aléatoire entre 0 et 49
 
-    function getRandomNumber(min, max) {
-        min = Math.ceil(min);
+    function getxRandomNumber(min, max) {
+        min = Math.ceil(min);   
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -273,7 +272,7 @@ webSocketServer.on("connect", function (socket) {
         console.log("bbbbbbbbbbbbbbb")
         console.log("bbbbbbbbbbbbbbb")
         socket.join(room)
-   
+
         MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
             console.log("MONGOCLIENT")
             if (err) {
@@ -298,7 +297,7 @@ webSocketServer.on("connect", function (socket) {
                             var response = Object.assign({}, questions[i]);
                             delete question["reponse"]
                             delete question.anecdote
-                            console.log(socket)
+                            // console.log(socket)
 
                             console.log(i)
                             console.log(questions[i])
@@ -352,7 +351,9 @@ webSocketServer.on("connect", function (socket) {
         let insertion = {};
 
         identifiant = req.session.userName;
-        score
+        
+        insertion.pseudo = identifiant;
+        insertion.score ;
     }
  })
  
