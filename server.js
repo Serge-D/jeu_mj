@@ -222,6 +222,7 @@ const io = require("socket.io");
 
 const webSocketServer = io(serverHTTP);
 console.log(webSocketServer.nsps['/'].adapter.rooms)
+
 var rooms = ["Lobby"];
 
 webSocketServer.on("connect", function (socket) {
@@ -237,7 +238,6 @@ webSocketServer.on("connect", function (socket) {
             } else {  
                 console.log(room)
                 socket.join(room);
-                
             }
         })
         socket.emit("updaterooms", rooms, socket.rooms);
@@ -308,8 +308,20 @@ webSocketServer.on("connect", function (socket) {
                             }
                             console.log("emit question", room, question)
                             webSocketServer.sockets.in(room).emit('questions', question)
-
+                            
                             var testTimeout = setTimeout(() => {
+
+                                // console.log("bababababa");
+                                // var bonneReponse = collection.find(question).toArray(function(err, data){
+                                //     if(err){
+                                //         console.log("impossible d'acceder à la collection");
+                                //     }else{
+                                //         console.log(data.reponse)
+                                //     }
+                                // });
+                                // console.log(bonneReponse);
+                                // console.log("BABABABABABABA")
+
                                 console.log("emit response", room, response)
                                 webSocketServer.sockets.in(room).emit('response', response)
                             }, 3000)
@@ -325,8 +337,20 @@ webSocketServer.on("connect", function (socket) {
 
  
 
-    socket.on("reponses", function(){
+    socket.on("reponseDonnee", function(){
+        MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+            if(err){
+                console.log("Il y a une erreur à régler")
+            }else{
+                // let db = client.db("jeu_mj");
+                // let collection = db.collection("questions");
+                // collection.find()
+                // var bonneReponse = collection.find(reponse);
+                // if(bonneReponse === ){
 
+                // }
+            }
+        })
     })
 
 

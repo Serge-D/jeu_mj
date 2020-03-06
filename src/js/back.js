@@ -219,7 +219,7 @@ reponseA.addEventListener("click", function(){
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    // ioClient.emit("reponseDonnee",{reponseA.innerHTML, numQuestion.innerHTML} )
+    ioClient.emit("reponseDonnee", reponseA.innerHTML, numQuestion.innerHTML )
 })
 
 
@@ -254,14 +254,6 @@ reponseD.addEventListener("click", function(){
     }
     ioClient.emit()
 })
-
-
-
-
-
-
-
-
 
 
 
