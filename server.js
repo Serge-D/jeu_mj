@@ -342,9 +342,11 @@ webSocketServer.on("connect", function (socket) {
             if(err){
                 console.log("Il y a une erreur à régler")
             }else{
-                // let db = client.db("jeu_mj");
-                // let collection = db.collection("questions");
-                // collection.find()
+                let db = client.db("jeu_mj");
+                let collection = db.collection("questions");
+                collection.find({"num-question": id, "reponse": reponse}).toArray(function(err, data){
+                    
+                })
                 // var bonneReponse = collection.find(reponse);
                 // if(bonneReponse === ){
 
