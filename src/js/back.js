@@ -4,6 +4,7 @@
 
 console.log("prout")
 
+var numQuestion = window.document.getElementById("numQuestion")
 var theme = window.document.getElementById("theme");
 var question = window.document.getElementById("question");
 var reponseA = window.document.getElementById("reponseA");
@@ -64,7 +65,7 @@ ioClient.on("connect", function(){
 })
 
 ioClient.on("updaterooms", function(rooms){
-    // console.log(rooms);
+    console.log(rooms);
 })
 console.log(bouttonStart)
 
@@ -207,19 +208,20 @@ ioClient.on("response", function(response){
 
 
 reponseA.addEventListener("click", function(){
-    console.log("AHAHAHAHAHAHAHAAH")
-    console.log()
-    console.log("AGAGAGAGAGAGAGAAGAG")
     console.log(reponseA.innerHTML)
     console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
+    console.log(ioClient.id)  
 
     reponseA.style.backgroundColor = "goldenrod"; 
     if(reponseA.style.backgroundColor == "goldenrod"){
+        reponseA.disabled = true;
         reponseB.disabled = true;
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    ioClient.emit("reponseDonnee", reponseA.innerHTML, numQuestion.innerHTML )
+    let reponseDeA = reponseA.innerHTML;
+    let questionDeA = numQuestion.innerHTML;
+    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA )
 })
 
 
@@ -227,6 +229,7 @@ reponseB.addEventListener("click", function(){
     reponseB.style.backgroundColor = "goldenrod"; 
     if(reponseB.style.backgroundColor == "goldenrod"){
         reponseA.disabled = true;
+        reponseB.disabled = true;
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
@@ -239,6 +242,7 @@ reponseC.addEventListener("click", function(){
     if(reponseC.style.backgroundColor == "goldenrod"){
         reponseB.disabled = true;
         reponseA.disabled = true;
+        reponseC.disabled = true;
         reponseD.disabled = true;
     }
     ioClient.emit()
@@ -251,6 +255,7 @@ reponseD.addEventListener("click", function(){
         reponseB.disabled = true;
         reponseC.disabled = true;
         reponseA.disabled = true;
+        reponseD.disabled = true;
     }
     ioClient.emit()
 })

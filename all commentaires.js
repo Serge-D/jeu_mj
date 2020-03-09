@@ -252,3 +252,19 @@ MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,cl
 //         ioClient.send()
 //     }, 30000);
 // });
+
+// socket.on("join_room", (room) => {
+
+//     socket.join(room)
+// })
+// console.log(socket.adapter.rooms) // permet de voir toutes les rooms présentes
+
+
+//fonction pour generer des chiffres aléatoires pour generer des numéros de questions aléatoire entre 0 et 49
+
+// var nombreAleatoire = function (min, max) {
+//     min = Math.ceil(0);   
+//     max = Math.floor(49);
+//     return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
+// var numQuestion = nombreAleatoire();
