@@ -305,8 +305,8 @@ var i;
         var testInterval = setInterval(() => {
             var question = questions[i]
             var response = Object.assign({}, questions[i]);
-            delete question["reponse"]
-            delete question.anecdote
+            // delete question.solution // LE PROBLEMEEEEEEEE
+            // delete question.anecdote
 
 
             console.log(i)
@@ -374,18 +374,53 @@ console.log("YAQUOI")
         console.log(questionDeA);
         console.log("---''''---");
         console.log(i)
-        console.log(questions[i-1].reponse);   
-        console.log(questions[i-1].id); 
-        console.log("--zeubi--")
-         
+        console.log(questions[i-1].solution);   
+        console.log(questions[i-1].id);
+        console.log("--zeubi--") 
+        
     }) 
-    
+     
+    socket.on("reponseDonneeDeB", function(reponseDeB, questionDeB){
+        console.log("---''''---");
+        console.log(reponseDeB);  
+        console.log(questionDeB);
+        console.log("---''''---");
+        console.log(i)
+        console.log(questions[i-1].solution);   
+        console.log(questions[i-1].id);
+        console.log("--zeubi--") 
+        
+    }) 
+
+    socket.on("reponseDonneeDeC", function(reponseDeC, questionDeC){
+        console.log("---''''---");
+        console.log(reponseDeC);  
+        console.log(questionDeC);
+        console.log("---''''---");
+        console.log(i)
+        console.log(questions[i-1].solution);   
+        console.log(questions[i-1].id);
+        console.log("--zeubi--") 
+        
+    }) 
+
+    socket.on("reponseDonneeDeD", function(reponseDeD, questionDeD){
+        console.log("---''''---");
+        console.log(reponseDeD);  
+        console.log(questionDeD);
+        console.log("---''''---");
+        console.log(i)
+        console.log(questions[i-1].solution);   
+        console.log(questions[i-1].id);
+        console.log("--zeubi--")  
+        
+    }) 
 
 
 
     // /**** partie pour quitter la room *****/ 
     socket.on("disconnect", function () {
-        socket.leave(socket.room); 
+        socket.leave(socket.room);  
     })
  
 

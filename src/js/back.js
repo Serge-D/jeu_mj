@@ -179,7 +179,7 @@ var questionPosée = function(questions){
 
 var reponsePosée = function(questions){
     
-    reponseFinale.innerHTML = questions.reponse;
+    reponseFinale.innerHTML = questions.solution;
     anecdote.innerHTML = questions.anecdote;
 }
 
@@ -221,7 +221,7 @@ reponseA.addEventListener("click", function(){
     }
     let reponseDeA = reponseA.innerHTML;
     let questionDeA = numQuestion.innerHTML;
-    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA )
+    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA );
 })
 
 
@@ -233,7 +233,9 @@ reponseB.addEventListener("click", function(){
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    ioClient.emit()
+    let reponseDeB= reponseB.innerHTML;
+    let questionDeB = numQuestion.innerHTML;
+    ioClient.emit("reponseDonneeDeB", reponseDeB, questionDeB);
 })
 
 
@@ -245,7 +247,9 @@ reponseC.addEventListener("click", function(){
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    ioClient.emit()
+    let reponseDeC= reponseC.innerHTML;
+    let questionDeC = numQuestion.innerHTML;
+    ioClient.emit("reponseDonneeDeC", reponseDeC, questionDeC);
 })
 
 
@@ -257,7 +261,9 @@ reponseD.addEventListener("click", function(){
         reponseA.disabled = true;
         reponseD.disabled = true;
     }
-    ioClient.emit()
+    let reponseDeD= reponseD.innerHTML;
+    let questionDeD = numQuestion.innerHTML;
+    ioClient.emit("reponseDonneeDeD", reponseDeD, questionDeD);
 })
 
 
