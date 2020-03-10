@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 const MongoStore = connectMongo(expressSession)
 
-//variable pour la date d'expiration des cookies
+//variables pour la date d'expiration des cookies et pour la durée de la session
 var cookieExpiration = new Date(Date.now() + 3600); // 1 hour
 console.log(cookieExpiration);
 var sessionlife = 60 * 60 * 1000;
@@ -241,7 +241,8 @@ const io = require("socket.io");
 const webSocketServer = io(serverHTTP);
 console.log(webSocketServer.nsps['/'].adapter.rooms)
 
-var rooms = ["Lobby"];
+
+var rooms = [];
 
 webSocketServer.on("connect", function (socket) {
     // le socket correspond au tunnel de la personne connectée
@@ -301,6 +302,7 @@ var i;
         console.log(webSocketServer.nsps['/'].adapter.rooms)
         console.log("bbbbbbbbbbbbbbb")
         socket.join(room)
+        console.log(socket.rooms)
 
         var testInterval = setInterval(() => {
             var question = questions[i]
@@ -337,38 +339,10 @@ console.log("YAQUOI")
 });
 
 
-    // var verifReponse = function(reponseDonnee){
-    //     console.log("----TAMEME----")
-    //     console.log(reponseDonnee)
-    //     console.log("----TAMEME----") 
-    //     console.log("___________")
-    //     console.log(i)
-    //     console.log("___________")
-    //     let bonneReponse = questions[i].reponse;
-    //     // let bonneReponseString = (bonneReponse).toString();
-    //     console.log("--------TONPEPE--------")
-    //     console.log(bonneReponse);
-    //     console.log("--------TONPEPE--------")
-    //     // console.log(bonneReponseString);
-    //     if(reponseDonnee == bonneReponse){
-    //         console.log("score +1")
-    //         MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
-    //             if(err){
-    //                 console.log("erreur avec mongo")
-    //             }else{
-    //                 let db = client.db("jeu_mj");
-    //                 let collection = db.collection("scores");
-    //                 collection.updateOne({score : score++})
-                    
-    //             }
-    //         })
-    //     }
-    // }
-
-
-
 
     socket.on("reponseDonneeDeA", function(reponseDeA, questionDeA){
+        console.log()
+        console.log(socket.id)
         console.log("---''''---");
         console.log(reponseDeA);  
         console.log(questionDeA);
@@ -376,8 +350,21 @@ console.log("YAQUOI")
         console.log(i)
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
-        console.log("--zeubi--") 
-        
+        console.log("--zeubi--")  
+        let bonneSolutionA = questions[i-1].solution;
+        if(bonneSolutionA == reponseDeA){
+            console.log("score +1")
+            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+                if(err){
+                    console.log("erreur avec mongo") 
+                }else{
+                    let db = client.db("jeu_mj");
+                    let collection = db.collection("scores");
+                    collection.updateOne({},{$inc:{score:1}}) 
+ 
+                }
+            })
+        }
     }) 
      
     socket.on("reponseDonneeDeB", function(reponseDeB, questionDeB){
@@ -389,7 +376,20 @@ console.log("YAQUOI")
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
         console.log("--zeubi--") 
-        
+        let bonneSolutionB = questions[i-1].solution;
+        if(bonneSolutionB == reponseDeB){
+            console.log("score + 1!")
+            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+                if(err){
+                    console.log("erreur avec mongo") 
+                }else{
+                    let db = client.db("jeu_mj");
+                    let collection = db.collection("scores");
+                    collection.updateOne({},{$inc:{score:1}}) 
+
+                }
+            })
+        }
     }) 
 
     socket.on("reponseDonneeDeC", function(reponseDeC, questionDeC){
@@ -401,7 +401,20 @@ console.log("YAQUOI")
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
         console.log("--zeubi--") 
-        
+        let bonneSolutionC = questions[i-1].solution;
+        if(bonneSolutionC == reponseDeC){
+            console.log("score + 1 !!")
+            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+                if(err){
+                    console.log("erreur avec mongo") 
+                }else{
+                    let db = client.db("jeu_mj");
+                    let collection = db.collection("scores");
+                    collection.updateOne({},{$inc:{score:1}}) 
+
+                }
+            })
+        }
     }) 
 
     socket.on("reponseDonneeDeD", function(reponseDeD, questionDeD){
@@ -412,7 +425,20 @@ console.log("YAQUOI")
         console.log(i)
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
-        console.log("--zeubi--")  
+        console.log("--zeubi--")
+        let bonneSolutionD = questions[i-1].solution;
+        if(bonneSolutionD == reponseDeD){
+            console.log("score + 1!!!")
+            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+                if(err){
+                    console.log("erreur avec mongo") 
+                }else{
+                    let db = client.db("jeu_mj");
+                    let collection = db.collection("scores");
+                    collection.updateOne({},{$inc:{score:1}}) 
+                }
+            })
+        }  
         
     }) 
 
@@ -427,21 +453,3 @@ console.log("YAQUOI")
 });
 
 
-/**** fonction pour enregistrer les scores
- 
- MongoClient.connect("mongodb://localhost:27017",{useUnifiedTopology: true}, function (err, client){
-  if(err){
-    console.log("impossible de se connecter à la base de données")
-    }else{
-        let db = client.db("jeu_mj");
-        let collection = db.collection("scores");
-        let insertion = {};
-
-        identifiant = req.session.userName;
-        
-        insertion.pseudo = identifiant;
-        insertion.score ;
-    }
- })
- 
- ****/

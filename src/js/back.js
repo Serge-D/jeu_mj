@@ -26,6 +26,7 @@ var partieDeux = document.getElementById("partieDeux");
 var partieTrois = document.getElementById("partieTrois");
 var partieQuatre = document.getElementById("partieQuatre");
 var partieCinq = document.getElementById("partieCinq");
+ 
 
 
 console.log(bouttonStart)
@@ -76,7 +77,7 @@ bouttonStart.addEventListener("click", function(event){
     ioClient.emit("start", getCookie("room"));
 })
 }    
-
+ 
 
 if(boutonRejoindre){
 
@@ -203,14 +204,18 @@ ioClient.on("questions", function(question){
 ioClient.on("response", function(response){
     // console.log(response)
     reponsePosée(response);
-   
+    reponseA.disabled = true;
+    reponseB.disabled = true;
+    reponseC.disabled = true;
+    reponseD.disabled = true;
 })
 
 
 reponseA.addEventListener("click", function(){
     console.log(reponseA.innerHTML)
     console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
-    console.log(ioClient.id)  
+    console.log(ioClient.id)
+    console.log()
 
     reponseA.style.backgroundColor = "goldenrod"; 
     if(reponseA.style.backgroundColor == "goldenrod"){
@@ -221,7 +226,7 @@ reponseA.addEventListener("click", function(){
     }
     let reponseDeA = reponseA.innerHTML;
     let questionDeA = numQuestion.innerHTML;
-    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA );
+    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA ); 
 })
 
 

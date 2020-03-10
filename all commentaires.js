@@ -268,3 +268,32 @@ MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,cl
 //     return Math.floor(Math.random() * (max - min + 1)) + min;
 // }
 // var numQuestion = nombreAleatoire();
+
+
+    // var verifReponse = function(reponseDonnee){
+    //     console.log("----TAMEME----")
+    //     console.log(reponseDonnee)
+    //     console.log("----TAMEME----") 
+    //     console.log("___________")
+    //     console.log(i)
+    //     console.log("___________")
+    //     let bonneReponse = questions[i].reponse;
+    //     // let bonneReponseString = (bonneReponse).toString();
+    //     console.log("--------TONPEPE--------")
+    //     console.log(bonneReponse);
+    //     console.log("--------TONPEPE--------")
+    //     // console.log(bonneReponseString);
+    //     if(reponseDonnee == bonneReponse){
+    //         console.log("score +1")
+    //         MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+    //             if(err){
+    //                 console.log("erreur avec mongo")
+    //             }else{
+    //                 let db = client.db("jeu_mj");
+    //                 let collection = db.collection("scores");
+    //                 collection.updateOne({score : score++})
+                    
+    //             }
+    //         })
+    //     }
+    // }
