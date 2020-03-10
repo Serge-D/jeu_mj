@@ -21,7 +21,7 @@ app.use(cookieParser());
 const MongoStore = connectMongo(expressSession)
 
 //variables pour la date d'expiration des cookies et pour la durée de la session
-var cookieExpiration = new Date(Date.now() + 3600); // 1 hour
+var cookieExpiration = 60 * 60 * 1000; // 1 hour
 console.log(cookieExpiration);
 var sessionlife = 60 * 60 * 1000;
 
@@ -32,7 +32,7 @@ const options = {
     secret: "1234Secret",
     saveUninitialized: true,
     resave: false,
-    expires: cookieExpiration,
+    expires: new Date(Date.now() + cookieExpiration),
     rolling: true, // reset maxAge on every response
     cookie: {
         maxAge: sessionlife,

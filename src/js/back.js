@@ -215,7 +215,7 @@ reponseA.addEventListener("click", function(){
     console.log(reponseA.innerHTML)
     console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
     console.log(ioClient.id)
-    console.log()
+    console.log(getCookie("user_id"))
 
     reponseA.style.backgroundColor = "goldenrod"; 
     if(reponseA.style.backgroundColor == "goldenrod"){
@@ -226,7 +226,8 @@ reponseA.addEventListener("click", function(){
     }
     let reponseDeA = reponseA.innerHTML;
     let questionDeA = numQuestion.innerHTML;
-    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA ); 
+    let userId = getCookie("user_id")
+    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA, userId );  
 })
 
 
