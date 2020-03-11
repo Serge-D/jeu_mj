@@ -239,7 +239,7 @@ const serverHTTP = app.listen(8080, function () {
 const io = require("socket.io");
 
 const webSocketServer = io(serverHTTP);
-console.log(webSocketServer.nsps['/'].adapter.rooms)
+
 
 
 var rooms = [];
@@ -247,25 +247,78 @@ var rooms = [];
 webSocketServer.on("connect", function (socket) {
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
- 
+    
+
+    socket.on("create_room1", function(room){
+        console.log("yal1111111")
+        console.log(room)
+        console.log(socket.rooms) 
+        console.log("yalaaaaaa")
+        socket.join(room)
+    })
+
+    
+    socket.on("create_room2", function(room){
+        console.log("yal222222")
+        console.log(room)
+        console.log(socket.rooms) 
+        console.log("yalaaaaaa")
+        socket.join(room)
+    })
+    
+    
+    socket.on("create_room3", function(room){
+        console.log("yal333333")
+        console.log(room)
+        console.log(socket.rooms) 
+        console.log("yalaaaaaa")
+        socket.join(room)
+    })
+
+    
+    socket.on("create_room4", function(room){
+        console.log("yal444444")
+        console.log(room)
+        console.log(socket.rooms) 
+        console.log("yalaaaaaa")
+        socket.join(room)
+    })
+
+    
+    socket.on("create_room5", function(room){
+        console.log("yal555555")
+        console.log(room)
+        console.log(socket.rooms) 
+        console.log("yalaaaaaa")
+        socket.join(room)
+    })
+
+
+
+
   
-    socket.on("create_room", function (room) {
-        MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
-            console.log("MONGOCLIENT")
-            if (err) {
-                console.log("Cannot connect to database");
-            } else {  
-                console.log(room)
-                socket.join(room);
-            }
-        })
+    socket.on("create_room", function (roomName) {
+        console.log("ici c'est les rooms")
+        console.log(roomName)
+        console.log("------------------")
+        socket.join(roomName);
+
+        var room = webSocketServer.sockets.adapter.rooms[roomName];
+        console.log("PAPPAPAPAAPAPAPAAPA")
+        console.log(room)
+        console.log(room.sockets)
+        console.log(room.length);
+        console.log("PAPPAPAPAAPAPAPAAPA") 
+        console.log(socket.rooms)
+        console.log("MAMAMAMAMAMAAMAMAMAMA") 
+        console.log(rooms)
+        console.log("YALAAAAAAAAA")      
+
         socket.emit("updaterooms", rooms, socket.rooms);
 
-        console.log("TACHATTE")
-        console.log(socket.rooms)
     });
    
-   
+    console.log(webSocketServer.nsps['/'].adapter.rooms) 
 
 var questions;
 var i;
@@ -319,15 +372,16 @@ var i;
                 return
             }
             console.log("----LALA----")
+            console.log(room)
             console.log("emit question", room, question)
             console.log("----LALA----")
-            webSocketServer.sockets.in(room).emit('questions', question)
+            webSocketServer.sockets.to(room).emit('questions', question)
             
             var testTimeout = setTimeout(() => {
                 console.log("------------ICI------------")
                 console.log("emit response", room, response)
                 console.log("------------ICI------------")
-                webSocketServer.sockets.in(room).emit('response', response)
+                webSocketServer.sockets.to(room).emit('response', response) 
             }, 3000)
             i++
             console.log("-----TAPUTINDETAMERE-------")
@@ -340,19 +394,19 @@ console.log("YAQUOI")
 
 
 
-    socket.on("reponseDonneeDeA", function(reponseDeA, questionDeA){
-        console.log()
+    socket.on("reponseDonneeDeA", function(envoiReponseA){
+        console.log("-----")
         console.log(socket.id)
         console.log("---''''---");
-        console.log(reponseDeA);  
-        console.log(questionDeA);
+        console.log(envoiReponseA.reponseDeA);  
+        console.log(envoiReponseA.questionDeA);
         console.log("---''''---");
         console.log(i)
         console.log(questions[i-1].solution);   
-        console.log(questions[i-1].id);
+        console.log(questions[i-1].id); 
         console.log("--zeubi--")  
         let bonneSolutionA = questions[i-1].solution;
-        if(bonneSolutionA == reponseDeA){
+        if(bonneSolutionA == envoiReponseA.reponseDeA){
             console.log("score +1")
             MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
                 if(err){
@@ -367,17 +421,17 @@ console.log("YAQUOI")
         }
     }) 
      
-    socket.on("reponseDonneeDeB", function(reponseDeB, questionDeB){
+    socket.on("reponseDonneeDeB", function(envoiReponseB){
         console.log("---''''---");
-        console.log(reponseDeB);  
-        console.log(questionDeB);
+        console.log(envoiReponseB.reponseDeB);  
+        console.log(envoiReponseB.questionDeB);
         console.log("---''''---");
         console.log(i)
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
         console.log("--zeubi--") 
         let bonneSolutionB = questions[i-1].solution;
-        if(bonneSolutionB == reponseDeB){
+        if(bonneSolutionB == envoiReponseB.reponseDeB){
             console.log("score + 1!")
             MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
                 if(err){
@@ -392,17 +446,17 @@ console.log("YAQUOI")
         }
     }) 
 
-    socket.on("reponseDonneeDeC", function(reponseDeC, questionDeC){
+    socket.on("reponseDonneeDeC", function(envoiReponseC){
         console.log("---''''---");
-        console.log(reponseDeC);  
-        console.log(questionDeC);
+        console.log(envoiReponseC.reponseDeC);  
+        console.log(envoiReponseC.questionDeC);
         console.log("---''''---");
         console.log(i)
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
         console.log("--zeubi--") 
         let bonneSolutionC = questions[i-1].solution;
-        if(bonneSolutionC == reponseDeC){
+        if(bonneSolutionC == envoiReponseC.reponseDeC){
             console.log("score + 1 !!")
             MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
                 if(err){
@@ -417,17 +471,17 @@ console.log("YAQUOI")
         }
     }) 
 
-    socket.on("reponseDonneeDeD", function(reponseDeD, questionDeD){
+    socket.on("reponseDonneeDeD", function(envoiReponseD){
         console.log("---''''---");
-        console.log(reponseDeD);  
-        console.log(questionDeD);
+        console.log(envoiReponseD.reponseDeD);  
+        console.log(envoiReponseD.questionDeD);
         console.log("---''''---");
         console.log(i)
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id);
         console.log("--zeubi--")
         let bonneSolutionD = questions[i-1].solution;
-        if(bonneSolutionD == reponseDeD){
+        if(bonneSolutionD == envoiReponseD.reponseDeD){
             console.log("score + 1!!!")
             MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
                 if(err){

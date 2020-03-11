@@ -29,7 +29,7 @@ var partieCinq = document.getElementById("partieCinq");
  
 
 
-console.log(bouttonStart)
+// console.log(bouttonStart)
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -66,9 +66,12 @@ ioClient.on("connect", function(){
 })
 
 ioClient.on("updaterooms", function(rooms){
+    console.log("je veux savoir si ca marche")
     console.log(rooms);
+    
+
 })
-console.log(bouttonStart)
+// console.log(bouttonStart)
 
 if(bouttonStart){
 bouttonStart.addEventListener("click", function(event){
@@ -85,7 +88,7 @@ if(boutonRejoindre){
                 // event.preventDefault();
 
         console.log("room azeaeazeaea")
-        var roomName = document.getElementById("roomName").value
+        let roomName = document.getElementById("roomName").value 
     
         console.log(roomName)
     
@@ -93,7 +96,7 @@ if(boutonRejoindre){
     
         ioClient.emit('create_room', roomName)
         
-        console.log(questionPosée)
+        // console.log(questionPosée)
     });
 }   
 
@@ -102,14 +105,15 @@ if(partieUne){
     partieUne.addEventListener("click", (event)=>{
         console.log("room Partie une");
         
-        var roomName = document.getElementById("partieUne").value
+        let roomName = document.getElementById("partieUne").value
         
         console.log(roomName);
 
         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
+        ioClient.emit("create_room1", roomName);
+
+        // console.log(questionPosée)
     })
 }
 
@@ -117,12 +121,12 @@ if(partieDeux){
 
     partieDeux.addEventListener("click", (event)=>{
         console.log("room Partie Deux");
-        var roomName = document.getElementById("partieDeux").value
+        let roomName = document.getElementById("partieDeux").value
         console.log(roomName);
         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
+        ioClient.emit("create_room2", roomName);
+        // console.log(questionPosée)
     })
 }
 
@@ -131,12 +135,12 @@ if(partieTrois){
 
     partieTrois.addEventListener("click", (event)=>{
         console.log("room Partie Trois");
-        var roomName = document.getElementById("partieTrois").value
+        let roomName = document.getElementById("partieTrois").value
         console.log(roomName);
         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
+        ioClient.emit("create_room3", roomName);
+        // console.log(questionPosée)
     })
 }
 
@@ -144,12 +148,12 @@ if(partieQuatre){
 
     partieQuatre.addEventListener("click", (event)=>{
         console.log("room Partie Quatre");
-        var roomName = document.getElementById("partieQuatre").value
+        let roomName = document.getElementById("partieQuatre").value
         console.log(roomName);
         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
+        ioClient.emit("create_room4", roomName);
+        // console.log(questionPosée)
     })
 }
 
@@ -157,12 +161,12 @@ if(partieCinq){
 
     partieCinq.addEventListener("click", (event)=>{
         console.log("room Partie Cinq");
-        var roomName = document.getElementById("partieCinq").value
+        let roomName = document.getElementById("partieCinq").value
         console.log(roomName);
         setCookie("room", roomName)
 
-        ioClient.emit("create_room", roomName);
-        console.log(questionPosée)
+        ioClient.emit("create_room5", roomName);
+        // console.log(questionPosée)
     })
 }
 
@@ -184,7 +188,7 @@ var reponsePosée = function(questions){
     anecdote.innerHTML = questions.anecdote;
 }
 
-console.log(questionPosée)
+// console.log(questionPosée)
 
 ioClient.on("questions", function(question){
     // console.log(question)
@@ -210,12 +214,16 @@ ioClient.on("response", function(response){
     reponseD.disabled = true;
 })
 
+bouttonStart.addEventListener("click",function(){
+    bouttonStart.disabled = true;
+})
 
 reponseA.addEventListener("click", function(){
     console.log(reponseA.innerHTML)
     console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
     console.log(ioClient.id)
     console.log(getCookie("user_id"))
+    console.log(setCookie("room")) 
 
     reponseA.style.backgroundColor = "goldenrod"; 
     if(reponseA.style.backgroundColor == "goldenrod"){
@@ -224,14 +232,21 @@ reponseA.addEventListener("click", function(){
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    let reponseDeA = reponseA.innerHTML;
-    let questionDeA = numQuestion.innerHTML;
-    let userId = getCookie("user_id") // FAIT UN OBJET AVEC LES 3
-    ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA, userId );  
+    let envoiReponseA = {
+    reponseDeA : reponseA.innerHTML,
+    questionDeA : numQuestion.innerHTML,
+    userId : getCookie("user_id") 
+    }
+    ioClient.emit("reponseDonneeDeA", envoiReponseA );  
 })
 
 
 reponseB.addEventListener("click", function(){
+    console.log(reponseB.innerHTML)
+    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
+    console.log(ioClient.id)
+    console.log(getCookie("user_id"))
+
     reponseB.style.backgroundColor = "goldenrod"; 
     if(reponseB.style.backgroundColor == "goldenrod"){
         reponseA.disabled = true;
@@ -239,13 +254,21 @@ reponseB.addEventListener("click", function(){
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    let reponseDeB= reponseB.innerHTML;
-    let questionDeB = numQuestion.innerHTML;
-    ioClient.emit("reponseDonneeDeB", reponseDeB, questionDeB);
+    let envoiReponseB = {
+        reponseDeB : reponseB.innerHTML,
+        questionDeB : numQuestion.innerHTML,
+        userId : getCookie("user_id") 
+        }
+    ioClient.emit("reponseDonneeDeB", envoiReponseB);
 })
 
 
 reponseC.addEventListener("click", function(){
+    console.log(reponseC.innerHTML)
+    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
+    console.log(ioClient.id)
+    console.log(getCookie("user_id"))
+
     reponseC.style.backgroundColor = "goldenrod"; 
     if(reponseC.style.backgroundColor == "goldenrod"){
         reponseB.disabled = true;
@@ -253,13 +276,21 @@ reponseC.addEventListener("click", function(){
         reponseC.disabled = true;
         reponseD.disabled = true;
     }
-    let reponseDeC= reponseC.innerHTML;
-    let questionDeC = numQuestion.innerHTML;
-    ioClient.emit("reponseDonneeDeC", reponseDeC, questionDeC);
+    let envoiReponseC = {
+        reponseDeC : reponseC.innerHTML,
+        questionDeC : numQuestion.innerHTML,
+        userId : getCookie("user_id") 
+        };
+    ioClient.emit("reponseDonneeDeC", envoiReponseC);
 })
 
 
 reponseD.addEventListener("click", function(){
+    console.log(reponseD.innerHTML)
+    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
+    console.log(ioClient.id)
+    console.log(getCookie("user_id"))
+
     reponseD.style.backgroundColor = "goldenrod"; 
     if(reponseD.style.backgroundColor == "goldenrod"){
         reponseB.disabled = true;
@@ -267,9 +298,12 @@ reponseD.addEventListener("click", function(){
         reponseA.disabled = true;
         reponseD.disabled = true;
     }
-    let reponseDeD= reponseD.innerHTML;
-    let questionDeD = numQuestion.innerHTML;
-    ioClient.emit("reponseDonneeDeD", reponseDeD, questionDeD);
+    let envoiReponseD = {
+        reponseDeD : reponseD.innerHTML,
+        questionDeD : numQuestion.innerHTML,
+        userId : getCookie("user_id") 
+        }
+    ioClient.emit("reponseDonneeDeD", envoiReponseD);
 })
 
 
