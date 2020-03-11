@@ -226,7 +226,7 @@ reponseA.addEventListener("click", function(){
     }
     let reponseDeA = reponseA.innerHTML;
     let questionDeA = numQuestion.innerHTML;
-    let userId = getCookie("user_id")
+    let userId = getCookie("user_id") // FAIT UN OBJET AVEC LES 3
     ioClient.emit("reponseDonneeDeA", reponseDeA, questionDeA, userId );  
 })
 
