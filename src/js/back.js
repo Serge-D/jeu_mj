@@ -76,6 +76,7 @@ ioClient.on("updaterooms", function(rooms){
 if(bouttonStart){
 bouttonStart.addEventListener("click", function(event){
     console.log("ahahaahahah")
+    console.log(getCookie("room"))
     event.preventDefault();
     ioClient.emit("start", getCookie("room"));
 })
@@ -93,6 +94,7 @@ if(boutonRejoindre){
         console.log(roomName)
     
         setCookie("room", roomName)
+        
     
         ioClient.emit('create_room', roomName)
         
@@ -231,7 +233,7 @@ reponseA.addEventListener("click", function(){
         reponseB.disabled = true;
         reponseC.disabled = true;
         reponseD.disabled = true;
-    }
+    } 
     let envoiReponseA = {
     reponseDeA : reponseA.innerHTML,
     questionDeA : numQuestion.innerHTML,

@@ -150,6 +150,7 @@ app.post("/connexion", function (req, res) {
                 if (user.mdp === motDePasse && user.pseudo === ident) {
                     req.session.userName = user.pseudo;
                     req.session.authentification = true;
+                    req.session.uuid = user.uuid
                     res.cookie("user_id", user.uuid, {
                         expires: new Date(Date.now() + 900000),
                         httpOnly: false
@@ -211,6 +212,7 @@ app.get("/game", (req, res) => {
             let collection = db.collection("scores");
             let insertion = {};
             insertion.pseudo = req.session.userName;
+            insertion.uuid = req.session.uuid;
             var score = 0; 
             insertion.score = score;
             collection.insertOne(insertion, function(err,results){
@@ -252,10 +254,15 @@ webSocketServer.on("connect", function (socket) {
     socket.on("create_room1", function(room){
         console.log("yal1111111")
         console.log(room)
-        console.log(socket.rooms) 
+        console.log(room)
+        console.log(socket.rooms)
+        console.log(socket.id) 
         console.log("yalaaaaaa")
         socket.join(room)
+        
+        socket.emit("updaterooms", room, socket.rooms, socket.id)
     })
+    
 
     
     socket.on("create_room2", function(room){
@@ -264,6 +271,8 @@ webSocketServer.on("connect", function (socket) {
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
+
+        socket.emit("updaterooms", room, socket.rooms)
     })
     
     
@@ -273,6 +282,8 @@ webSocketServer.on("connect", function (socket) {
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
+
+        socket.emit("updaterooms", room, socket.rooms)
     })
 
     
@@ -282,15 +293,26 @@ webSocketServer.on("connect", function (socket) {
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
+
+        socket.emit("updaterooms", room, socket.rooms)
     })
 
     
     socket.on("create_room5", function(room){
-        console.log("yal555555")
         console.log(room)
+        console.log("yal555555")
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
+
+        if (webSocketServer.sockets.adapter.rooms[room]) 
+            {
+            // result
+            console.log("test")
+            console.log(webSocketServer.sockets.adapter.rooms[room].length);
+            }
+
+        socket.emit("updaterooms", room, socket.rooms)
     })
 
 
@@ -318,7 +340,7 @@ webSocketServer.on("connect", function (socket) {
 
     });
    
-    console.log(webSocketServer.nsps['/'].adapter.rooms) 
+     
 
 var questions;
 var i;
@@ -399,8 +421,9 @@ console.log("YAQUOI")
         console.log(socket.id)
         console.log("---''''---");
         console.log(envoiReponseA.reponseDeA);  
-        console.log(envoiReponseA.questionDeA);
-        console.log("---''''---");
+        console.log(envoiReponseA.questionDeA); 
+        console.log(envoiReponseA.userId); // n'affiche rien
+        console.log("---''''---")
         console.log(i)
         console.log(questions[i-1].solution);   
         console.log(questions[i-1].id); 
@@ -414,7 +437,13 @@ console.log("YAQUOI")
                 }else{
                     let db = client.db("jeu_mj");
                     let collection = db.collection("scores");
-                    collection.updateOne({},{$inc:{score:1}}) 
+                    collection.find().toArray(function(err,data){
+                        if(err){
+                            console.log("data non trouvée")
+                        }else{
+                            collection.updateOne({},{$inc:{score:1}}) 
+                        }
+                    })
  
                 }
             })
