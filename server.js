@@ -48,9 +48,17 @@ app.use(function (req, res, next) {
         } else {
             if (!req.session.userName) {
                 console.log("test")
-                res.redirect("/home")
+                res.cookie("user_id", "", {
+                    expires: new Date(Date.now() + 900000),
+                    httpOnly: false
+                })
+                res.redirect("/home") 
             } else {
                 console.log("test2")
+                res.cookie("user_id", req.session.uuid, {
+                    expires: new Date(Date.now() + 900000),
+                    httpOnly: false
+                })
                 next()
             }
         }
@@ -146,7 +154,7 @@ app.post("/connexion", function (req, res) {
             if (data.length) {
                 console.log(data)
                 let user = data[0]; // probleme si plusieurs personnes sont connectées le data[0] n'est plus bon ????? //semi réponse = si c'est ok si la session est ouverte
-
+                    console.log(data[0])
                 if (user.mdp === motDePasse && user.pseudo === ident) {
                     req.session.userName = user.pseudo;
                     req.session.authentification = true;
@@ -223,7 +231,7 @@ app.get("/game", (req, res) => {
                 }
             })
         }
-    })
+    }) 
     res.render("jeu", {
         present: req.session.userName,
         image: req.session.avatar
@@ -246,10 +254,15 @@ const webSocketServer = io(serverHTTP);
 
 var rooms = [];
 
+
+
 webSocketServer.on("connect", function (socket) {
     // le socket correspond au tunnel de la personne connectée
     console.log("connected to the client");
-    
+
+    var sessionid = socket.id;
+    console.log(sessionid);
+
 
     socket.on("create_room1", function(room){
         console.log("yal1111111")
@@ -438,13 +451,13 @@ console.log("YAQUOI")
                     let db = client.db("jeu_mj");
                     let collection = db.collection("scores");
                     collection.find().toArray(function(err,data){
+                        console.log(data[0].pseudo)
                         if(err){
                             console.log("data non trouvée")
                         }else{
                             collection.updateOne({},{$inc:{score:1}}) 
                         }
-                    })
- 
+                    }) 
                 }
             })
         }

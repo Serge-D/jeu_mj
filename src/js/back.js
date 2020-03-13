@@ -26,7 +26,8 @@ var partieDeux = document.getElementById("partieDeux");
 var partieTrois = document.getElementById("partieTrois");
 var partieQuatre = document.getElementById("partieQuatre");
 var partieCinq = document.getElementById("partieCinq");
- 
+var idConnexion = document.getElementById("idConnexion");
+var idInscription = document.getElementById("idInscription") 
 
 
 // console.log(bouttonStart)
@@ -112,7 +113,7 @@ if(partieUne){
         console.log(roomName);
 
         setCookie("room", roomName)
-
+ 
         ioClient.emit("create_room1", roomName);
 
         // console.log(questionPosée)
@@ -225,7 +226,7 @@ reponseA.addEventListener("click", function(){
     console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
     console.log(ioClient.id)
     console.log(getCookie("user_id"))
-    console.log(setCookie("room")) 
+    console.log(setCookie("room"))  
 
     reponseA.style.backgroundColor = "goldenrod"; 
     if(reponseA.style.backgroundColor == "goldenrod"){
@@ -239,6 +240,7 @@ reponseA.addEventListener("click", function(){
     questionDeA : numQuestion.innerHTML,
     userId : getCookie("user_id") 
     }
+    console.log(envoiReponseA)
     ioClient.emit("reponseDonneeDeA", envoiReponseA );  
 })
 

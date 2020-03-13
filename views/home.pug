@@ -9,7 +9,7 @@ include includes/head.pug
   form(action='/inscription' method='POST')
     label(for='name') Nom
     br
-    input(type='text' name='identifiant')
+    input#idConnexion(type='text' name='identifiant')
     br
     label(for='mdp') Mot de passe
     br
@@ -24,7 +24,7 @@ include includes/head.pug
   form(action='/connexion' method='POST')
     label(for='name') Nom
     br
-    input(type='text' name='identifiant')
+    input#idInscription(type='text' name='identifiant')
     br
     label(for='mdp') Mot de passe
     br
@@ -49,4 +49,5 @@ include includes/head.pug
 
 
 script(src="/js/backHome.js")
+script(src="/js/back.js")
 include includes/footer.pug
