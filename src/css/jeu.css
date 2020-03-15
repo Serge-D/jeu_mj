@@ -106,13 +106,18 @@ p {
     
 }
 
+#joueurs{
+    display: flex;
+    justify-content: space-around;
+}
+
 
 #fenetreDeJeu {
     font-family: 'Comic Sans MS',serif;
     color: whitesmoke;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 90px;
+    margin-top: 20px;
     width: 1200px;
     border: 2px solid black;
     height: 700px;
@@ -266,6 +271,11 @@ p {
     top: 285px;
 }
 
+#bouttonStart{
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
 
 /* Images */
 

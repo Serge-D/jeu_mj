@@ -26,8 +26,10 @@ var partieDeux = document.getElementById("partieDeux");
 var partieTrois = document.getElementById("partieTrois");
 var partieQuatre = document.getElementById("partieQuatre");
 var partieCinq = document.getElementById("partieCinq");
+var scoreJ1 = document.getElementById("score1");
+var scoreJ2 = document.getElementById("score2");
 var idConnexion = document.getElementById("idConnexion");
-var idInscription = document.getElementById("idInscription") 
+var idInscription = document.getElementById("idInscription");
 
 
 // console.log(bouttonStart)
@@ -69,7 +71,7 @@ ioClient.on("connect", function(){
 ioClient.on("updaterooms", function(rooms){
     console.log("je veux savoir si ca marche")
     console.log(rooms);
-    
+    console.log(tableauJoueur)
 
 })
 // console.log(bouttonStart)
@@ -83,6 +85,7 @@ bouttonStart.addEventListener("click", function(event){
 })
 }    
  
+var tableauJoueur = [];
 
 if(boutonRejoindre){
 
@@ -96,8 +99,9 @@ if(boutonRejoindre){
     
         setCookie("room", roomName)
         
+        let player = getCookie("user_id");
     
-        ioClient.emit('create_room', roomName)
+        ioClient.emit('create_room', roomName, player)
         
         // console.log(questionPosée)
     });
@@ -113,8 +117,12 @@ if(partieUne){
         console.log(roomName);
 
         setCookie("room", roomName)
+
+        let player = getCookie("user_id");
+
+        tableauJoueur.push(player);
  
-        ioClient.emit("create_room1", roomName);
+        ioClient.emit("create_room1", roomName, tableauJoueur); 
 
         // console.log(questionPosée)
     })
@@ -124,11 +132,16 @@ if(partieDeux){
 
     partieDeux.addEventListener("click", (event)=>{
         console.log("room Partie Deux");
+
         let roomName = document.getElementById("partieDeux").value
+
         console.log(roomName);
+
         setCookie("room", roomName)
 
-        ioClient.emit("create_room2", roomName);
+        let player = getCookie("user_id");
+        
+        ioClient.emit("create_room2", roomName, player);
         // console.log(questionPosée)
     })
 }
@@ -138,11 +151,16 @@ if(partieTrois){
 
     partieTrois.addEventListener("click", (event)=>{
         console.log("room Partie Trois");
+
         let roomName = document.getElementById("partieTrois").value
+
         console.log(roomName);
+
         setCookie("room", roomName)
 
-        ioClient.emit("create_room3", roomName);
+        let player = getCookie("user_id");
+
+        ioClient.emit("create_room3", roomName, player);
         // console.log(questionPosée)
     })
 }
@@ -151,11 +169,16 @@ if(partieQuatre){
 
     partieQuatre.addEventListener("click", (event)=>{
         console.log("room Partie Quatre");
+
         let roomName = document.getElementById("partieQuatre").value
+
         console.log(roomName);
+
         setCookie("room", roomName)
 
-        ioClient.emit("create_room4", roomName);
+        let player = getCookie("user_id");
+
+        ioClient.emit("create_room4", roomName, player);
         // console.log(questionPosée)
     })
 }
@@ -164,11 +187,16 @@ if(partieCinq){
 
     partieCinq.addEventListener("click", (event)=>{
         console.log("room Partie Cinq");
+
         let roomName = document.getElementById("partieCinq").value
+
         console.log(roomName);
+
         setCookie("room", roomName)
 
-        ioClient.emit("create_room5", roomName);
+        let player = getCookie("user_id");
+
+        ioClient.emit("create_room5", roomName, player);
         // console.log(questionPosée)
     })
 }
@@ -242,6 +270,7 @@ reponseA.addEventListener("click", function(){
     }
     console.log(envoiReponseA)
     ioClient.emit("reponseDonneeDeA", envoiReponseA );  
+
 })
 
 

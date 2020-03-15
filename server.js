@@ -155,7 +155,7 @@ app.post("/connexion", function (req, res) {
                 console.log(data)
                 let user = data[0]; // probleme si plusieurs personnes sont connectées le data[0] n'est plus bon ????? //semi réponse = si c'est ok si la session est ouverte
                     console.log(data[0])
-                if (user.mdp === motDePasse && user.pseudo === ident) {
+                if (user.mdp === motDePasse) {
                     req.session.userName = user.pseudo;
                     req.session.authentification = true;
                     req.session.uuid = user.uuid
@@ -195,7 +195,7 @@ app.post("/avatar", function (req, res) {
     res.redirect("/room")
 });
 
-app.get("/room", function (req, res) {
+app.get("/room", function (req, res) { 
     res.render("room")
 })
 
@@ -264,77 +264,82 @@ webSocketServer.on("connect", function (socket) {
     console.log(sessionid);
 
 
-    socket.on("create_room1", function(room){
+    // var playerByRoom = [];
+
+    socket.on("create_room1", function(room, tableauJoueur){
         console.log("yal1111111")
-        console.log(room)
+        console.log(tableauJoueur)
+        // console.log(player)
         console.log(room)
         console.log(socket.rooms)
-        console.log(socket.id) 
+        console.log(socket.id)
+        // playerByRoom.push(player);
+        // console.log(playerByRoom)
         console.log("yalaaaaaa")
         socket.join(room)
+
+
+        var roomOne = webSocketServer.sockets.adapter.rooms[room];
+        console.log(roomOne)
+        console.log(roomOne.length)
         
-        socket.emit("updaterooms", room, socket.rooms, socket.id)
+        socket.emit("updaterooms", room, tableauJoueur)
     })
     
 
     
-    socket.on("create_room2", function(room){
+    socket.on("create_room2", function(room, player){ 
         console.log("yal222222")
         console.log(room)
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms)
+        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
     
     
-    socket.on("create_room3", function(room){
+    socket.on("create_room3", function(room, player){
         console.log("yal333333")
         console.log(room)
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms)
+        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
 
     
-    socket.on("create_room4", function(room){
+    socket.on("create_room4", function(room, player){
         console.log("yal444444")
         console.log(room)
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms)
+        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
 
     
-    socket.on("create_room5", function(room){
+    socket.on("create_room5", function(room, player){
         console.log(room)
         console.log("yal555555")
         console.log(socket.rooms) 
         console.log("yalaaaaaa")
+        console.log(player)
         socket.join(room)
 
-        if (webSocketServer.sockets.adapter.rooms[room]) 
-            {
-            // result
-            console.log("test")
-            console.log(webSocketServer.sockets.adapter.rooms[room].length);
-            }
-
-        socket.emit("updaterooms", room, socket.rooms)
+        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
 
 
 
 
   
-    socket.on("create_room", function (roomName) {
+    socket.on("create_room", function (roomName, player) {
         console.log("ici c'est les rooms")
         console.log(roomName)
+        console.log(player)
         console.log("------------------")
         socket.join(roomName);
 
@@ -349,7 +354,7 @@ webSocketServer.on("connect", function (socket) {
         console.log(rooms)
         console.log("YALAAAAAAAAA")      
 
-        socket.emit("updaterooms", rooms, socket.rooms);
+        socket.emit("updaterooms", rooms, socket.rooms, socket.id, player);
 
     });
    
@@ -379,7 +384,7 @@ var i;
 
                 }
             });
-        }
+        } 
     });
 
     socket.on("start", function (room) {
@@ -388,9 +393,9 @@ var i;
         console.log("RECU EMIT START GAME")
         console.log("room", room)
         console.log(webSocketServer.nsps['/'].adapter.rooms)
-        console.log("bbbbbbbbbbbbbbb")
+        console.log("bbbbbbbbbbbbbbb") 
         socket.join(room)
-        console.log(socket.rooms)
+        console.log(socket.rooms) 
 
         var testInterval = setInterval(() => {
             var question = questions[i]
@@ -449,16 +454,18 @@ console.log("YAQUOI")
                     console.log("erreur avec mongo") 
                 }else{
                     let db = client.db("jeu_mj");
-                    let collection = db.collection("scores");
-                    collection.find().toArray(function(err,data){
-                        console.log(data[0].pseudo)
+                    let collection = db.collection("scores"); 
+                    console.log("BATATATATATATA")
+                    console.log(envoiReponseA.userId)
+                    collection.find({uuid:envoiReponseA.userId}).toArray(function(err,data){
                         if(err){
                             console.log("data non trouvée")
                         }else{
-                            collection.updateOne({},{$inc:{score:1}}) 
+                            console.log(data) 
+                            collection.updateOne({uuid:envoiReponseA.userId},{$inc:{score:1}}) 
                         }
                     }) 
-                }
+                } 
             })
         }
     }) 
@@ -480,8 +487,16 @@ console.log("YAQUOI")
                     console.log("erreur avec mongo") 
                 }else{
                     let db = client.db("jeu_mj");
-                    let collection = db.collection("scores");
-                    collection.updateOne({},{$inc:{score:1}}) 
+                    let collection = db.collection("scores"); 
+                    console.log("BATATATATATATA")
+                    console.log(envoiReponseB.userId)
+                    collection.find({uuid:envoiReponseB.userId}).toArray(function(err,data){
+                        if(err){
+                            console.log("data non trouvée")
+                        }else{ 
+                            collection.updateOne({uuid:envoiReponseB.userId},{$inc:{score:1}}) 
+                        }
+                    }) 
 
                 }
             })
@@ -505,9 +520,17 @@ console.log("YAQUOI")
                     console.log("erreur avec mongo") 
                 }else{
                     let db = client.db("jeu_mj");
-                    let collection = db.collection("scores");
-                    collection.updateOne({},{$inc:{score:1}}) 
-
+                    let collection = db.collection("scores"); 
+                    console.log("BATATATATATATA")
+                    console.log(envoiReponseC.userId)
+                    collection.find({uuid:envoiReponseC.userId}).toArray(function(err,data){
+                        if(err){
+                            console.log("data non trouvée")
+                        }else{
+                            console.log(data) 
+                            collection.updateOne({uuid:envoiReponseC.userId},{$inc:{score:1}}) 
+                        }
+                    }) 
                 }
             })
         }
@@ -530,8 +553,17 @@ console.log("YAQUOI")
                     console.log("erreur avec mongo") 
                 }else{
                     let db = client.db("jeu_mj");
-                    let collection = db.collection("scores");
-                    collection.updateOne({},{$inc:{score:1}}) 
+                    let collection = db.collection("scores"); 
+                    console.log("BATATATATATATA")
+                    console.log(envoiReponseD.userId)
+                    collection.find({uuid:envoiReponseD.userId}).toArray(function(err,data){
+                        if(err){
+                            console.log("data non trouvée")
+                        }else{
+                            console.log(data) 
+                            collection.updateOne({uuid:envoiReponseD.userId},{$inc:{score:1}}) 
+                        }
+                    }) 
                 }
             })
         }  
@@ -543,7 +575,7 @@ console.log("YAQUOI")
     // /**** partie pour quitter la room *****/ 
     socket.on("disconnect", function () {
         socket.leave(socket.room);  
-    })
+    }) 
  
 
 });
