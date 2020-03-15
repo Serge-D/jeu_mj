@@ -40,6 +40,28 @@ const options = {
     },
 }
 
+
+var questions;
+
+MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
+    console.log("MONGOCLIENT")
+    if (err) {
+        console.log("Cannot connect to database");
+    } else {
+        let db = client.db("jeu_mj");
+        let collection = db.collection("questions");
+        collection.find().toArray(function (err, data) {
+            if (err) {
+                console.log("impossible d'acceder a la collection")
+            } else {
+                questions = data
+            }
+        });
+    } 
+}); 
+
+console.log(questions)
+
 app.use(expressSession(options));
 
 app.use(function (req, res, next) {
@@ -282,8 +304,7 @@ webSocketServer.on("connect", function (socket) {
         var roomOne = webSocketServer.sockets.adapter.rooms[room];
         console.log(roomOne)
         console.log(roomOne.length)
-        
-        socket.emit("updaterooms", room, tableauJoueur)
+    
     })
     
 
@@ -295,7 +316,6 @@ webSocketServer.on("connect", function (socket) {
         console.log("yalaaaaaa")
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
     
     
@@ -306,7 +326,7 @@ webSocketServer.on("connect", function (socket) {
         console.log("yalaaaaaa")
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
+
     })
 
     
@@ -317,7 +337,6 @@ webSocketServer.on("connect", function (socket) {
         console.log("yalaaaaaa")
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
 
     
@@ -329,7 +348,6 @@ webSocketServer.on("connect", function (socket) {
         console.log(player)
         socket.join(room)
 
-        socket.emit("updaterooms", room, socket.rooms, socket.id, player)
     })
 
 
@@ -343,59 +361,41 @@ webSocketServer.on("connect", function (socket) {
         console.log("------------------")
         socket.join(roomName);
 
-        var room = webSocketServer.sockets.adapter.rooms[roomName];
-        console.log("PAPPAPAPAAPAPAPAAPA")
-        console.log(room)
-        console.log(room.sockets)
-        console.log(room.length);
-        console.log("PAPPAPAPAAPAPAPAAPA") 
-        console.log(socket.rooms)
-        console.log("MAMAMAMAMAMAAMAMAMAMA") 
-        console.log(rooms)
-        console.log("YALAAAAAAAAA")      
+        console.log(webSocketServer.sockets.adapter.rooms)
+        webSocketServer.sockets.adapter.rooms[roomName]["start"] = true
+        console.log(webSocketServer.sockets.adapter.rooms)
 
-        socket.emit("updaterooms", rooms, socket.rooms, socket.id, player);
-
+        // var room = webSocketServer.sockets.adapter.rooms[roomName];
+        // console.log("PAPPAPAPAAPAPAPAAPA")
+        // console.log(room)
+        // console.log(room.sockets)
+        // console.log(room.length);
+        // console.log("PAPPAPAPAAPAPAPAAPA") 
+        // console.log(socket.rooms)
+        // console.log("MAMAMAMAMAMAAMAMAMAMA") 
+        // console.log(rooms)
+        // console.log("YALAAAAAAAAA")       
+ 
+ 
     });
    
      
 
-var questions;
-var i;
-
-    MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
-        console.log("MONGOCLIENT")
-        if (err) {
-            console.log("Cannot connect to database");
-        } else {
-            let db = client.db("jeu_mj");
-            let collection = db.collection("questions");
-            collection.find().toArray(function (err, data) {
-                if (err) {
-                    console.log("impossible d'acceder a la collection")
-                } else {
-                    questions = data
-                    // console.log(questions)
-                    // console.log("YAQUOI")
-                    i = 0
-                    console.log("------")
-                    console.log(i)
-                    console.log("------")
-
-                }
-            });
-        } 
-    });
 
     socket.on("start", function (room) {
         console.log("bbbbbbbbbbbbbbb")
         console.log(socket.adapter.rooms)
         console.log("RECU EMIT START GAME")
         console.log("room", room)
+        console.log(webSocketServer.sockets.adapter.rooms)
+
         console.log(webSocketServer.nsps['/'].adapter.rooms)
-        console.log("bbbbbbbbbbbbbbb") 
-        socket.join(room)
+        console.log("bbbbbbbbbbbbbbb")  
+        // socket.join(room)
         console.log(socket.rooms) 
+        var i=0; 
+ 
+
 
         var testInterval = setInterval(() => {
             var question = questions[i]
@@ -415,13 +415,13 @@ var i;
             console.log(room)
             console.log("emit question", room, question)
             console.log("----LALA----")
-            webSocketServer.sockets.to(room).emit('questions', question)
+            webSocketServer.sockets.in(room).emit('questions', question)
             
             var testTimeout = setTimeout(() => {
                 console.log("------------ICI------------")
                 console.log("emit response", room, response)
                 console.log("------------ICI------------")
-                webSocketServer.sockets.to(room).emit('response', response) 
+                webSocketServer.sockets.in(room).emit('response', response)  
             }, 3000)
             i++
             console.log("-----TAPUTINDETAMERE-------")
@@ -432,55 +432,9 @@ var i;
 console.log("YAQUOI")
 });
 
-
-
-    socket.on("reponseDonneeDeA", function(envoiReponseA){
-        console.log("-----")
-        console.log(socket.id)
-        console.log("---''''---");
-        console.log(envoiReponseA.reponseDeA);  
-        console.log(envoiReponseA.questionDeA); 
-        console.log(envoiReponseA.userId); // n'affiche rien
-        console.log("---''''---")
-        console.log(i)
-        console.log(questions[i-1].solution);   
-        console.log(questions[i-1].id); 
-        console.log("--zeubi--")  
-        let bonneSolutionA = questions[i-1].solution;
-        if(bonneSolutionA == envoiReponseA.reponseDeA){
-            console.log("score +1")
-            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
-                if(err){
-                    console.log("erreur avec mongo") 
-                }else{
-                    let db = client.db("jeu_mj");
-                    let collection = db.collection("scores"); 
-                    console.log("BATATATATATATA")
-                    console.log(envoiReponseA.userId)
-                    collection.find({uuid:envoiReponseA.userId}).toArray(function(err,data){
-                        if(err){
-                            console.log("data non trouvée")
-                        }else{
-                            console.log(data) 
-                            collection.updateOne({uuid:envoiReponseA.userId},{$inc:{score:1}}) 
-                        }
-                    }) 
-                } 
-            })
-        }
-    }) 
-     
-    socket.on("reponseDonneeDeB", function(envoiReponseB){
-        console.log("---''''---");
-        console.log(envoiReponseB.reponseDeB);  
-        console.log(envoiReponseB.questionDeB);
-        console.log("---''''---");
-        console.log(i)
-        console.log(questions[i-1].solution);   
-        console.log(questions[i-1].id);
-        console.log("--zeubi--") 
-        let bonneSolutionB = questions[i-1].solution;
-        if(bonneSolutionB == envoiReponseB.reponseDeB){
+    socket.on("reponse", function(data){
+        let solution = questions[parseFloat(data.question.split("question ")[1])].solution;
+        if(solution == data.reponse){
             console.log("score + 1!")
             MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
                 if(err){
@@ -489,12 +443,12 @@ console.log("YAQUOI")
                     let db = client.db("jeu_mj");
                     let collection = db.collection("scores"); 
                     console.log("BATATATATATATA")
-                    console.log(envoiReponseB.userId)
-                    collection.find({uuid:envoiReponseB.userId}).toArray(function(err,data){
+                    console.log(data.userId)
+                    collection.find({uuid:data.userId}).toArray(function(err,data){
                         if(err){
                             console.log("data non trouvée")
                         }else{ 
-                            collection.updateOne({uuid:envoiReponseB.userId},{$inc:{score:1}}) 
+                            collection.updateOne({uuid:data.userId},{$inc:{score:1}}) 
                         }
                     }) 
 
@@ -503,79 +457,16 @@ console.log("YAQUOI")
         }
     }) 
 
-    socket.on("reponseDonneeDeC", function(envoiReponseC){
-        console.log("---''''---");
-        console.log(envoiReponseC.reponseDeC);  
-        console.log(envoiReponseC.questionDeC);
-        console.log("---''''---");
-        console.log(i)
-        console.log(questions[i-1].solution);   
-        console.log(questions[i-1].id);
-        console.log("--zeubi--") 
-        let bonneSolutionC = questions[i-1].solution;
-        if(bonneSolutionC == envoiReponseC.reponseDeC){
-            console.log("score + 1 !!")
-            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
-                if(err){
-                    console.log("erreur avec mongo") 
-                }else{
-                    let db = client.db("jeu_mj");
-                    let collection = db.collection("scores"); 
-                    console.log("BATATATATATATA")
-                    console.log(envoiReponseC.userId)
-                    collection.find({uuid:envoiReponseC.userId}).toArray(function(err,data){
-                        if(err){
-                            console.log("data non trouvée")
-                        }else{
-                            console.log(data) 
-                            collection.updateOne({uuid:envoiReponseC.userId},{$inc:{score:1}}) 
-                        }
-                    }) 
-                }
-            })
-        }
-    }) 
-
-    socket.on("reponseDonneeDeD", function(envoiReponseD){
-        console.log("---''''---");
-        console.log(envoiReponseD.reponseDeD);  
-        console.log(envoiReponseD.questionDeD);
-        console.log("---''''---");
-        console.log(i)
-        console.log(questions[i-1].solution);   
-        console.log(questions[i-1].id);
-        console.log("--zeubi--")
-        let bonneSolutionD = questions[i-1].solution;
-        if(bonneSolutionD == envoiReponseD.reponseDeD){
-            console.log("score + 1!!!")
-            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
-                if(err){
-                    console.log("erreur avec mongo") 
-                }else{
-                    let db = client.db("jeu_mj");
-                    let collection = db.collection("scores"); 
-                    console.log("BATATATATATATA")
-                    console.log(envoiReponseD.userId)
-                    collection.find({uuid:envoiReponseD.userId}).toArray(function(err,data){
-                        if(err){
-                            console.log("data non trouvée")
-                        }else{
-                            console.log(data) 
-                            collection.updateOne({uuid:envoiReponseD.userId},{$inc:{score:1}}) 
-                        }
-                    }) 
-                }
-            })
-        }  
-        
-    }) 
-
+    
 
 
     // /**** partie pour quitter la room *****/ 
     socket.on("disconnect", function () {
         socket.leave(socket.room);  
-    }) 
+    })
+    
+    
+    
  
 
 });

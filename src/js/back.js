@@ -3,7 +3,7 @@
 
 
 console.log("prout")
-
+var ioClient;
 var numQuestion = window.document.getElementById("numQuestion")
 var theme = window.document.getElementById("theme");
 var question = window.document.getElementById("question");
@@ -19,7 +19,6 @@ var buttonConnexion = document.getElementById("connexion");
 var buttonInscription = document.getElementById("inscription");
 var formInscription = document.getElementById("formInscription");
 var formConnexion = document.getElementById("formConnexion");
-var bouttonStart = document.getElementById("bouttonStart");
 var boutonRejoindre = document.getElementById("boutonRejoindre");
 var partieUne = document.getElementById("partieUne");
 var partieDeux = document.getElementById("partieDeux");
@@ -56,288 +55,284 @@ function setCookie(cname, cvalue, exdays) {
 }
 
 
-window.addEventListener("DOMContentLoaded", function(){
+window.addEventListener("DOMContentLoaded", function(){ 
 
 
 
-    
-var ioClient = io("http://localhost:8080");
+  ioClient = io("http://localhost:8080", {reconnection: true});
 
 
 ioClient.on("connect", function(){
     console.log("Connecté au serveur");
+
+
+    var tableauJoueur = [];
+
+    if(boutonRejoindre){
+    
+        boutonRejoindre.addEventListener("click", (event)=>{
+                    event.preventDefault();
+    
+            console.log("room azeaeazeaea")
+            let roomName = document.getElementById("roomName").value 
+        
+            console.log(roomName)
+        
+            setCookie("room", roomName)
+            
+            let player = getCookie("user_id");
+        
+            ioClient.emit('create_room', roomName, player)
+            
+            // console.log(questionPosée)
+        });
+    }   
+    
+    if(partieUne){
+    
+        partieUne.addEventListener("click", (event)=>{
+            console.log("room Partie une");
+            
+            let roomName = document.getElementById("partieUne").value
+            
+            console.log(roomName);
+    
+            setCookie("room", roomName)
+    
+            let player = getCookie("user_id");
+    
+            tableauJoueur.push(player);
+     
+            ioClient.emit("create_room1", roomName, tableauJoueur); 
+    
+            // console.log(questionPosée)
+        })
+    }
+    
+    if(partieDeux){
+    
+        partieDeux.addEventListener("click", (event)=>{
+            console.log("room Partie Deux");
+    
+            let roomName = document.getElementById("partieDeux").value
+    
+            console.log(roomName);
+    
+            setCookie("room", roomName)
+    
+            let player = getCookie("user_id");
+            
+            ioClient.emit("create_room2", roomName, player);
+            // console.log(questionPosée)
+        })
+    }
+    
+    
+    if(partieTrois){
+    
+        partieTrois.addEventListener("click", (event)=>{
+            console.log("room Partie Trois");
+    
+            let roomName = document.getElementById("partieTrois").value
+    
+            console.log(roomName);
+    
+            setCookie("room", roomName)
+    
+            let player = getCookie("user_id");
+    
+            ioClient.emit("create_room3", roomName, player);
+            // console.log(questionPosée)
+        })
+    }
+    
+    if(partieQuatre){
+    
+        partieQuatre.addEventListener("click", (event)=>{
+            console.log("room Partie Quatre");
+    
+            let roomName = document.getElementById("partieQuatre").value
+    
+            console.log(roomName);
+    
+            setCookie("room", roomName)
+    
+            let player = getCookie("user_id");
+    
+            ioClient.emit("create_room4", roomName, player);
+            // console.log(questionPosée)
+        })
+    }
+    
+    if(partieCinq){
+    
+        partieCinq.addEventListener("click", (event)=>{
+            console.log("room Partie Cinq");
+    
+            let roomName = document.getElementById("partieCinq").value
+    
+            console.log(roomName);
+    
+            setCookie("room", roomName)
+    
+            let player = getCookie("user_id");
+    
+            ioClient.emit("create_room5", roomName, player);
+            // console.log(questionPosée)
+        })
+    }
+    
+    
+    var questionPosée = function(questions){
+    
+        theme.innerHTML= questions.theme;
+        numQuestion.innerHTML=questions.id
+        question.innerHTML= questions.question;
+        reponseA.innerHTML= questions.propositions[0];
+        reponseB.innerHTML= questions.propositions[1];
+        reponseC.innerHTML= questions.propositions[2];
+        reponseD.innerHTML= questions.propositions[3];         
+    }
+    
+    var reponsePosée = function(questions){
+        
+        reponseFinale.innerHTML = questions.solution;
+        anecdote.innerHTML = questions.anecdote;
+    }
+    
+    // console.log(questionPosée)
+    
+    ioClient.on("questions", function(question){
+        // console.log(question)
+        questionPosée(question)
+        reponseA.style.backgroundColor = "unset";
+        reponseB.style.backgroundColor = "unset";
+        reponseC.style.backgroundColor = "unset";
+        reponseD.style.backgroundColor = "unset";
+        reponseA.disabled = false;
+        reponseB.disabled = false;
+        reponseC.disabled = false;
+        reponseD.disabled = false;
+        reponseFinale.innerHTML = "";
+        anecdote.innerHTML = "";
+    })
+    
+    ioClient.on("response", function(response){
+        // console.log(response)
+        reponsePosée(response);
+        reponseA.disabled = true;
+        reponseB.disabled = true;
+        reponseC.disabled = true;
+        reponseD.disabled = true;
+    })
+
+
+
+    var bouttonStart = document.getElementById("bouttonStart");
+
+
+    if(bouttonStart){
+        bouttonStart.addEventListener("click", function(event){
+            bouttonStart.disabled = true;
+            console.log("ahahaahahah")
+            console.log(getCookie("room"))
+            event.preventDefault();
+            ioClient.emit("start", getCookie("room"));
+        })
+        }  
+    
+    if (reponseA){
+        reponseA.addEventListener("click", function(){
+    
+            reponseA.style.backgroundColor = "goldenrod"; 
+            if(reponseA.style.backgroundColor == "goldenrod"){
+                reponseA.disabled = true;
+                reponseB.disabled = true;
+                reponseC.disabled = true;
+                reponseD.disabled = true;
+            } 
+            let data = {
+            reponse : reponseA.innerHTML,
+            question : numQuestion.innerHTML,
+            userId : getCookie("user_id") 
+            }
+            console.log(data)
+            ioClient.emit("reponse", data );  
+        
+        })
+    }
+    
+    
+    if (reponseB){
+        reponseB.addEventListener("click", function(){
+    
+            reponseB.style.backgroundColor = "goldenrod"; 
+            if(reponseB.style.backgroundColor == "goldenrod"){
+                reponseA.disabled = true;
+                reponseB.disabled = true;
+                reponseC.disabled = true;
+                reponseD.disabled = true;
+            }
+            let data = {
+                reponse : reponseB.innerHTML,
+                question : numQuestion.innerHTML,
+                userId : getCookie("user_id") 
+                }
+            ioClient.emit("reponse", data);
+        })
+    }
+    
+    
+    if(reponseC){
+        reponseC.addEventListener("click", function(){
+    
+            reponseC.style.backgroundColor = "goldenrod"; 
+            if(reponseC.style.backgroundColor == "goldenrod"){
+                reponseB.disabled = true;
+                reponseA.disabled = true;
+                reponseC.disabled = true;
+                reponseD.disabled = true;
+            }
+            let data = {
+                reponse : reponseC.innerHTML,
+                question : numQuestion.innerHTML,
+                userId : getCookie("user_id") 
+                };
+            ioClient.emit("reponse", data);
+        })
+
+    }
+    
+    
+    if(reponseD){
+        reponseD.addEventListener("click", function(){ 
+    
+            reponseD.style.backgroundColor = "goldenrod"; 
+            if(reponseD.style.backgroundColor == "goldenrod"){
+                reponseB.disabled = true;
+                reponseC.disabled = true;
+                reponseA.disabled = true;
+                reponseD.disabled = true;
+            }
+            let data = {
+                reponse : reponseD.innerHTML,
+                question : numQuestion.innerHTML,
+                userId : getCookie("user_id") 
+                }
+            ioClient.emit("reponse", data);
+        })
+    }
+      
+    
 })
 
-ioClient.on("updaterooms", function(rooms){
-    console.log("je veux savoir si ca marche")
-    console.log(rooms);
-    console.log(tableauJoueur)
 
-})
 // console.log(bouttonStart)
-
-if(bouttonStart){
-bouttonStart.addEventListener("click", function(event){
-    console.log("ahahaahahah")
-    console.log(getCookie("room"))
-    event.preventDefault();
-    ioClient.emit("start", getCookie("room"));
-})
-}    
+  
  
-var tableauJoueur = [];
-
-if(boutonRejoindre){
-
-    boutonRejoindre.addEventListener("click", (event)=>{
-                // event.preventDefault();
-
-        console.log("room azeaeazeaea")
-        let roomName = document.getElementById("roomName").value 
-    
-        console.log(roomName)
-    
-        setCookie("room", roomName)
-        
-        let player = getCookie("user_id");
-    
-        ioClient.emit('create_room', roomName, player)
-        
-        // console.log(questionPosée)
-    });
-}   
-
-if(partieUne){
-
-    partieUne.addEventListener("click", (event)=>{
-        console.log("room Partie une");
-        
-        let roomName = document.getElementById("partieUne").value
-        
-        console.log(roomName);
-
-        setCookie("room", roomName)
-
-        let player = getCookie("user_id");
-
-        tableauJoueur.push(player);
- 
-        ioClient.emit("create_room1", roomName, tableauJoueur); 
-
-        // console.log(questionPosée)
-    })
-}
-
-if(partieDeux){
-
-    partieDeux.addEventListener("click", (event)=>{
-        console.log("room Partie Deux");
-
-        let roomName = document.getElementById("partieDeux").value
-
-        console.log(roomName);
-
-        setCookie("room", roomName)
-
-        let player = getCookie("user_id");
-        
-        ioClient.emit("create_room2", roomName, player);
-        // console.log(questionPosée)
-    })
-}
 
 
-if(partieTrois){
 
-    partieTrois.addEventListener("click", (event)=>{
-        console.log("room Partie Trois");
-
-        let roomName = document.getElementById("partieTrois").value
-
-        console.log(roomName);
-
-        setCookie("room", roomName)
-
-        let player = getCookie("user_id");
-
-        ioClient.emit("create_room3", roomName, player);
-        // console.log(questionPosée)
-    })
-}
-
-if(partieQuatre){
-
-    partieQuatre.addEventListener("click", (event)=>{
-        console.log("room Partie Quatre");
-
-        let roomName = document.getElementById("partieQuatre").value
-
-        console.log(roomName);
-
-        setCookie("room", roomName)
-
-        let player = getCookie("user_id");
-
-        ioClient.emit("create_room4", roomName, player);
-        // console.log(questionPosée)
-    })
-}
-
-if(partieCinq){
-
-    partieCinq.addEventListener("click", (event)=>{
-        console.log("room Partie Cinq");
-
-        let roomName = document.getElementById("partieCinq").value
-
-        console.log(roomName);
-
-        setCookie("room", roomName)
-
-        let player = getCookie("user_id");
-
-        ioClient.emit("create_room5", roomName, player);
-        // console.log(questionPosée)
-    })
-}
-
-
-var questionPosée = function(questions){
-
-    theme.innerHTML= questions.theme;
-    numQuestion.innerHTML=questions.id
-    question.innerHTML= questions.question;
-    reponseA.innerHTML= questions.propositions[0];
-    reponseB.innerHTML= questions.propositions[1];
-    reponseC.innerHTML= questions.propositions[2];
-    reponseD.innerHTML= questions.propositions[3];         
-}
-
-var reponsePosée = function(questions){
-    
-    reponseFinale.innerHTML = questions.solution;
-    anecdote.innerHTML = questions.anecdote;
-}
-
-// console.log(questionPosée)
-
-ioClient.on("questions", function(question){
-    // console.log(question)
-    questionPosée(question)
-    reponseA.style.backgroundColor = "unset";
-    reponseB.style.backgroundColor = "unset";
-    reponseC.style.backgroundColor = "unset";
-    reponseD.style.backgroundColor = "unset";
-    reponseA.disabled = false;
-    reponseB.disabled = false;
-    reponseC.disabled = false;
-    reponseD.disabled = false;
-    reponseFinale.innerHTML = "";
-    anecdote.innerHTML = "";
-})
-
-ioClient.on("response", function(response){
-    // console.log(response)
-    reponsePosée(response);
-    reponseA.disabled = true;
-    reponseB.disabled = true;
-    reponseC.disabled = true;
-    reponseD.disabled = true;
-})
-
-bouttonStart.addEventListener("click",function(){
-    bouttonStart.disabled = true;
-})
-
-reponseA.addEventListener("click", function(){
-    console.log(reponseA.innerHTML)
-    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
-    console.log(ioClient.id)
-    console.log(getCookie("user_id"))
-    console.log(setCookie("room"))  
-
-    reponseA.style.backgroundColor = "goldenrod"; 
-    if(reponseA.style.backgroundColor == "goldenrod"){
-        reponseA.disabled = true;
-        reponseB.disabled = true;
-        reponseC.disabled = true;
-        reponseD.disabled = true;
-    } 
-    let envoiReponseA = {
-    reponseDeA : reponseA.innerHTML,
-    questionDeA : numQuestion.innerHTML,
-    userId : getCookie("user_id") 
-    }
-    console.log(envoiReponseA)
-    ioClient.emit("reponseDonneeDeA", envoiReponseA );  
-
-})
-
-
-reponseB.addEventListener("click", function(){
-    console.log(reponseB.innerHTML)
-    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
-    console.log(ioClient.id)
-    console.log(getCookie("user_id"))
-
-    reponseB.style.backgroundColor = "goldenrod"; 
-    if(reponseB.style.backgroundColor == "goldenrod"){
-        reponseA.disabled = true;
-        reponseB.disabled = true;
-        reponseC.disabled = true;
-        reponseD.disabled = true;
-    }
-    let envoiReponseB = {
-        reponseDeB : reponseB.innerHTML,
-        questionDeB : numQuestion.innerHTML,
-        userId : getCookie("user_id") 
-        }
-    ioClient.emit("reponseDonneeDeB", envoiReponseB);
-})
-
-
-reponseC.addEventListener("click", function(){
-    console.log(reponseC.innerHTML)
-    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
-    console.log(ioClient.id)
-    console.log(getCookie("user_id"))
-
-    reponseC.style.backgroundColor = "goldenrod"; 
-    if(reponseC.style.backgroundColor == "goldenrod"){
-        reponseB.disabled = true;
-        reponseA.disabled = true;
-        reponseC.disabled = true;
-        reponseD.disabled = true;
-    }
-    let envoiReponseC = {
-        reponseDeC : reponseC.innerHTML,
-        questionDeC : numQuestion.innerHTML,
-        userId : getCookie("user_id") 
-        };
-    ioClient.emit("reponseDonneeDeC", envoiReponseC);
-})
-
-
-reponseD.addEventListener("click", function(){
-    console.log(reponseD.innerHTML)
-    console.log(numQuestion.innerHTML) // numéro de la question pour comparer la réponse en base de données
-    console.log(ioClient.id)
-    console.log(getCookie("user_id"))
-
-    reponseD.style.backgroundColor = "goldenrod"; 
-    if(reponseD.style.backgroundColor == "goldenrod"){
-        reponseB.disabled = true;
-        reponseC.disabled = true;
-        reponseA.disabled = true;
-        reponseD.disabled = true;
-    }
-    let envoiReponseD = {
-        reponseDeD : reponseD.innerHTML,
-        questionDeD : numQuestion.innerHTML,
-        userId : getCookie("user_id") 
-        }
-    ioClient.emit("reponseDonneeDeD", envoiReponseD);
-})
 
 
 

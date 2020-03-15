@@ -26,9 +26,37 @@ div#allForm
     label(for="partie perso") Partie Personnalisé
     br
     input#roomName(type="text")  
-    input#boutonRejoindre(type="submit" value="Rejoindre")
+    input#boutonRejoindre(type="submit" value="Rejoindre") 
+
+
+div#joueurs
+  div#joueur1
+    p=present
+    img#avatarfinal(src=image alt='')
+    p Score : 
+      span#score1 0
+  div#joueur2
+    p=present
+    img#avatarfinal(src=image alt='')
+    p Score : 
+      span#score2 0
+
+input#bouttonStart(type="button" value="Jouer") 
+
+section
+  #fenetreDeJeu
+    #numQuestion
+    #theme
+    #question
+    div#allpropositions
+      button#reponseA
+      button#reponseB
+      button#reponseC
+      button#reponseD 
+    #reponseFinale
+    #anecdote
 
 
 
 include includes/footer.pug
-script(src="/js/back.js")
+//- script(src="/js/back.js")
