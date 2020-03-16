@@ -297,3 +297,14 @@ MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,cl
     //         })
     //     }
     // }
+
+        // var room = webSocketServer.sockets.adapter.rooms[roomName];
+    // console.log("PAPPAPAPAAPAPAPAAPA")
+    // console.log(room)
+    // console.log(room.sockets)
+    // console.log(room.length);
+    // console.log("PAPPAPAPAAPAPAPAAPA") 
+    // console.log(socket.rooms)
+    // console.log("MAMAMAMAMAMAAMAMAMAMA") 
+    // console.log(rooms)
+    // console.log("YALAAAAAAAAA") 

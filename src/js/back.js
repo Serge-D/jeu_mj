@@ -18,8 +18,7 @@ var fenetreDeJeu = window.document.getElementById("fenetreDeJeu");
 var allForm = window.document.getElementById("allForm");
 var buttonConnexion = document.getElementById("connexion");
 var buttonInscription = document.getElementById("inscription");
-var formInscription = document.getElementById("formInscription");
-var formConnexion = document.getElementById("formConnexion");
+var formInscription = document.getElementById("formConnexion");
 var boutonRejoindre = document.getElementById("boutonRejoindre");
 var partieUne = document.getElementById("partieUne");
 var partieDeux = document.getElementById("partieDeux");
@@ -31,6 +30,10 @@ var scoreJ1 = document.getElementById("score1");
 var scoreJ2 = document.getElementById("score2");
 var idConnexion = document.getElementById("idConnexion");
 var idInscription = document.getElementById("idInscription");
+var bouttonStart = document.getElementById("bouttonStart");
+var messageAlerte = document.getElementById("message");
+var beforePartie = document.getElementById("beforePartie");
+var submitavatar = document.getElementById("submitAvatar")
 
 
 // console.log(bouttonStart)
@@ -65,6 +68,12 @@ bouttonStart.style.display = "none";
 fenetreDeJeu.style.display = "none";
 /********************************************/
 
+submitAvatar.addEventListener("click", function(event){
+    event.preventDefault();
+    console.log("nique ta grosse mere")
+    var valeur = document.querySelector('input[name=image]:checked').value;
+    console.log(valeur)
+})
 
 ioClient = io("http://localhost:8080", {reconnection: true});
 
@@ -73,7 +82,6 @@ ioClient.on("connect", function(){
     console.log("Connecté au serveur");
 
 
-    var tableauJoueur = [];
 
     if(boutonRejoindre){
     
@@ -91,7 +99,7 @@ ioClient.on("connect", function(){
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            allForm.style.display = "none";
+            beforePartie.style.display = "none";
         
             ioClient.emit('create_room', roomName, player)
             
@@ -109,22 +117,21 @@ ioClient.on("connect", function(){
             
             console.log(roomName);
     
-            getCookie("room") //donne le roomName
+            setCookie("room", roomName) //donne le roomName
     
             let player = getCookie("user_id");
     
-            tableauJoueur.push(player);
 
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            allForm.style.display = "none";
+            beforePartie.style.display = "none";
      
-            ioClient.emit("create_room1", roomName, tableauJoueur); 
+            ioClient.emit("create_room1", roomName, player); 
     
             // console.log(questionPosée)
         })
-    }
+    } 
     
     if(partieDeux){
     
@@ -143,7 +150,7 @@ ioClient.on("connect", function(){
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            allForm.style.display = "none";
+            beforePartie.style.display = "none";
             
             ioClient.emit("create_room2", roomName, player);
             // console.log(questionPosée)
@@ -168,7 +175,7 @@ ioClient.on("connect", function(){
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            allForm.style.display = "none";
+            beforePartie.style.display = "none";
     
             ioClient.emit("create_room3", roomName, player);
             // console.log(questionPosée)
@@ -192,8 +199,9 @@ ioClient.on("connect", function(){
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            allForm.style.display = "none";
-    
+            beforePartie.style.display = "none";
+
+         
             ioClient.emit("create_room4", roomName, player);
             // console.log(questionPosée)
         })
@@ -216,7 +224,7 @@ ioClient.on("connect", function(){
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            allForm.style.display = "none";
+            beforePartie.style.display = "none";
     
             ioClient.emit("create_room5", roomName, player);
             // console.log(questionPosée)
@@ -267,9 +275,10 @@ ioClient.on("connect", function(){
         reponseD.disabled = true;
     })
 
-
-
-    var bouttonStart = document.getElementById("bouttonStart");
+    ioClient.on("message",function(message){
+        alert(message);
+        document.location.reload();
+    })
 
 
     if(bouttonStart){
@@ -293,6 +302,7 @@ ioClient.on("connect", function(){
                 reponseD.disabled = true;
             } 
             let data = {
+            room : getCookie("room"),
             reponse : reponseA.innerHTML,
             question : numQuestion.innerHTML,
             userId : getCookie("user_id") 
@@ -315,6 +325,7 @@ ioClient.on("connect", function(){
                 reponseD.disabled = true;
             }
             let data = {
+                room : getCookie("room"),
                 reponse : reponseB.innerHTML,
                 question : numQuestion.innerHTML,
                 userId : getCookie("user_id") 
@@ -335,6 +346,7 @@ ioClient.on("connect", function(){
                 reponseD.disabled = true;
             }
             let data = {
+                room : getCookie("room"),
                 reponse : reponseC.innerHTML,
                 question : numQuestion.innerHTML,
                 userId : getCookie("user_id") 
@@ -356,6 +368,7 @@ ioClient.on("connect", function(){
                 reponseD.disabled = true;
             }
             let data = {
+                room : getCookie("room"), 
                 reponse : reponseD.innerHTML,
                 question : numQuestion.innerHTML,
                 userId : getCookie("user_id") 
@@ -364,13 +377,13 @@ ioClient.on("connect", function(){
         })
     }
       
-    
+    ioClient.on("scores", )
 })
 
 
 // console.log(bouttonStart)
   
- 
+
 
 
 

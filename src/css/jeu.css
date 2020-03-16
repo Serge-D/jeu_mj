@@ -246,6 +246,7 @@ p {
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
 
 #startGame{
@@ -268,7 +269,7 @@ p {
     right: 0;
     margin-right: auto;
     margin-left: auto;
-    top: 285px;
+    top: 420px;
 }
 
 #bouttonStart{
@@ -277,6 +278,10 @@ p {
     display: block;
 }
 
+#titreForm {
+    text-align: center;
+    color: aliceblue;
+}
 /* Images */
 
 form img {
@@ -285,9 +290,14 @@ form img {
 }
 
 #avatar {
+    color: aliceblue;
+    font-size: large;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    margin-left:auto;
+    margin-right: auto;
+    width: max-content;
 }
 
 #avatarfinal {
