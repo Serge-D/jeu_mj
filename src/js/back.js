@@ -15,6 +15,7 @@ var reponseFinale = window.document.getElementById("reponseFinale")
 var anecdote = window.document.getElementById("anecdote");
 var startGame = window.document.getElementById("startGame");
 var fenetreDeJeu = window.document.getElementById("fenetreDeJeu");
+var allForm = window.document.getElementById("allForm");
 var buttonConnexion = document.getElementById("connexion");
 var buttonInscription = document.getElementById("inscription");
 var formInscription = document.getElementById("formInscription");
@@ -25,6 +26,7 @@ var partieDeux = document.getElementById("partieDeux");
 var partieTrois = document.getElementById("partieTrois");
 var partieQuatre = document.getElementById("partieQuatre");
 var partieCinq = document.getElementById("partieCinq");
+var joueurs = document.getElementById("joueurs")
 var scoreJ1 = document.getElementById("score1");
 var scoreJ2 = document.getElementById("score2");
 var idConnexion = document.getElementById("idConnexion");
@@ -57,9 +59,14 @@ function setCookie(cname, cvalue, exdays) {
 
 window.addEventListener("DOMContentLoaded", function(){ 
 
+/************ Hide fenetre de jeu ***********/
+joueurs.style.display = "none";
+bouttonStart.style.display = "none";
+fenetreDeJeu.style.display = "none";
+/********************************************/
 
 
-  ioClient = io("http://localhost:8080", {reconnection: true});
+ioClient = io("http://localhost:8080", {reconnection: true});
 
 
 ioClient.on("connect", function(){
@@ -71,9 +78,8 @@ ioClient.on("connect", function(){
     if(boutonRejoindre){
     
         boutonRejoindre.addEventListener("click", (event)=>{
-                    event.preventDefault();
+            event.preventDefault();
     
-            console.log("room azeaeazeaea")
             let roomName = document.getElementById("roomName").value 
         
             console.log(roomName)
@@ -81,6 +87,11 @@ ioClient.on("connect", function(){
             setCookie("room", roomName)
             
             let player = getCookie("user_id");
+
+            joueurs.style.display = "flex";
+            bouttonStart.style.display = "block";
+            fenetreDeJeu.style.display = "block";
+            allForm.style.display = "none";
         
             ioClient.emit('create_room', roomName, player)
             
@@ -92,16 +103,22 @@ ioClient.on("connect", function(){
     
         partieUne.addEventListener("click", (event)=>{
             console.log("room Partie une");
+            event.preventDefault();
             
             let roomName = document.getElementById("partieUne").value
             
             console.log(roomName);
     
-            setCookie("room", roomName)
+            getCookie("room") //donne le roomName
     
             let player = getCookie("user_id");
     
             tableauJoueur.push(player);
+
+            joueurs.style.display = "flex";
+            bouttonStart.style.display = "block";
+            fenetreDeJeu.style.display = "block";
+            allForm.style.display = "none";
      
             ioClient.emit("create_room1", roomName, tableauJoueur); 
     
@@ -113,6 +130,7 @@ ioClient.on("connect", function(){
     
         partieDeux.addEventListener("click", (event)=>{
             console.log("room Partie Deux");
+            event.preventDefault();
     
             let roomName = document.getElementById("partieDeux").value
     
@@ -121,6 +139,11 @@ ioClient.on("connect", function(){
             setCookie("room", roomName)
     
             let player = getCookie("user_id");
+
+            joueurs.style.display = "flex";
+            bouttonStart.style.display = "block";
+            fenetreDeJeu.style.display = "block";
+            allForm.style.display = "none";
             
             ioClient.emit("create_room2", roomName, player);
             // console.log(questionPosée)
@@ -132,6 +155,7 @@ ioClient.on("connect", function(){
     
         partieTrois.addEventListener("click", (event)=>{
             console.log("room Partie Trois");
+            event.preventDefault();
     
             let roomName = document.getElementById("partieTrois").value
     
@@ -140,6 +164,11 @@ ioClient.on("connect", function(){
             setCookie("room", roomName)
     
             let player = getCookie("user_id");
+
+            joueurs.style.display = "flex";
+            bouttonStart.style.display = "block";
+            fenetreDeJeu.style.display = "block";
+            allForm.style.display = "none";
     
             ioClient.emit("create_room3", roomName, player);
             // console.log(questionPosée)
@@ -150,6 +179,7 @@ ioClient.on("connect", function(){
     
         partieQuatre.addEventListener("click", (event)=>{
             console.log("room Partie Quatre");
+            event.preventDefault();
     
             let roomName = document.getElementById("partieQuatre").value
     
@@ -158,6 +188,11 @@ ioClient.on("connect", function(){
             setCookie("room", roomName)
     
             let player = getCookie("user_id");
+
+            joueurs.style.display = "flex";
+            bouttonStart.style.display = "block";
+            fenetreDeJeu.style.display = "block";
+            allForm.style.display = "none";
     
             ioClient.emit("create_room4", roomName, player);
             // console.log(questionPosée)
@@ -168,6 +203,7 @@ ioClient.on("connect", function(){
     
         partieCinq.addEventListener("click", (event)=>{
             console.log("room Partie Cinq");
+            event.preventDefault();
     
             let roomName = document.getElementById("partieCinq").value
     
@@ -176,13 +212,18 @@ ioClient.on("connect", function(){
             setCookie("room", roomName)
     
             let player = getCookie("user_id");
+
+            joueurs.style.display = "flex";
+            bouttonStart.style.display = "block";
+            fenetreDeJeu.style.display = "block";
+            allForm.style.display = "none";
     
             ioClient.emit("create_room5", roomName, player);
             // console.log(questionPosée)
         })
     }
     
-    
+     
     var questionPosée = function(questions){
     
         theme.innerHTML= questions.theme;
