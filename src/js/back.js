@@ -23,7 +23,7 @@ var boutonRejoindre = document.getElementById("boutonRejoindre");
 var partieUne = document.getElementById("partieUne");
 var partieDeux = document.getElementById("partieDeux");
 var partieTrois = document.getElementById("partieTrois");
-var partieQuatre = document.getElementById("partieQuatre");
+var partieQuatre = document.getElementById("partieQuatre"); 
 var partieCinq = document.getElementById("partieCinq");
 var joueurs = document.getElementById("joueurs")
 var scoreJ1 = document.getElementById("score1");
@@ -68,26 +68,32 @@ bouttonStart.style.display = "none";
 fenetreDeJeu.style.display = "none";
 /********************************************/
 
-submitAvatar.addEventListener("click", function(event){
-    event.preventDefault();
-    console.log("nique ta grosse mere")
-    var valeur = document.querySelector('input[name=image]:checked').value;
-    console.log(valeur)
-})
 
 ioClient = io("http://localhost:8080", {reconnection: true});
 
 
 ioClient.on("connect", function(){
     console.log("Connecté au serveur");
+    
+    
+    
+    submitAvatar.addEventListener("click", function(event){
+        event.preventDefault();
+        var image = document.querySelector('input[name=image]:checked').value;
+        console.log(image)
 
+            ioClient.emit("avatar", image)
+    })
 
+    
 
+    
+    
     if(boutonRejoindre){
     
         boutonRejoindre.addEventListener("click", (event)=>{
             event.preventDefault();
-    
+            
             let roomName = document.getElementById("roomName").value 
         
             console.log(roomName)
@@ -377,11 +383,19 @@ ioClient.on("connect", function(){
         })
     }
       
-    ioClient.on("scores", )
+    var scorePlayer = function(playerScore){
+        scoreJ1 = playerScore;
+    }
+            
+    ioClient.on("scores", function(playerScore){
+        // console.log(playerScore);
+        console.log(Object.values(playerScore)[0])
+        scorePlayer(Object.values(playerScore)[0].innerHTML)
+    }) 
 })
+ 
 
-
-// console.log(bouttonStart)
+// console.log(bouttonStart) 
   
 
 

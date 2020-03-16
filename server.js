@@ -147,7 +147,7 @@ app.post("/inscription", function (req, res) {
                 insertion.pseudo = ident;
                 insertion.mdp = motDePasse;
                 insertion.uuid = uuid;
-                // insertion.score = [];
+                
                 collection.insertOne(insertion, function (err, results) {
                     res.cookie("user_id", uuid, {
                         expires: new Date(Date.now() + 900000),
@@ -164,6 +164,12 @@ app.post("/connexion", function (req, res) {
     MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client) {
         if (err) {
             console.log("erreur")
+        }
+
+        if (req.body.identifiant === "" || req.body.mdp === "") {
+            res.render("home", {
+                message: "Veuillez saisir les informations"
+            })
         }
 
         let db = client.db("jeu_mj");
@@ -215,10 +221,12 @@ app.post("/connexion", function (req, res) {
 // });
 
 app.get("/room", function (req, res) { 
-        req.session.avatar = req.body.image;
     res.render("room")
 })
 
+app.post("/room", function(req, res){
+    req.session.avatar = req.body.image;
+})
 
 
 // app.get("/jeu", function (req, res) {
@@ -283,7 +291,9 @@ webSocketServer.on("connect", function (socket) {
     console.log(roomID);
 
 
-    // var playerByRoom = [];
+    socket.on("avatar", function(image){
+        console.log(image); 
+    })
 
     socket.on("create_room1", function(room,player){
         console.log("yal1111111")
@@ -450,7 +460,7 @@ webSocketServer.on("connect", function (socket) {
         }else{
             webSocketServer.sockets.adapter.rooms[room]["start"] = true
         }
-        
+
         console.log("bbbbbbbbbbbbbbb")
         console.log(socket.adapter.rooms)
         console.log("RECU EMIT START GAME")
@@ -512,9 +522,10 @@ console.log("YAQUOI")
             var _room =  webSocketServer.sockets.adapter.rooms[data.room];
             console.log(_room) 
             _room["scores"][data.userId] += 1;
-            webSocketServer.sockets.in(data.room).emit("scores",_room["scores"]); 
+            var playerScore = _room["scores"]
+            webSocketServer.sockets.in(data.room).emit("scores",playerScore); 
             console.log(webSocketServer.sockets.adapter.rooms[data.room]);
-            console.log(_room.scores)
+            console.log(_room["scores"])
 
             //  MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
             //     if(err){
@@ -524,9 +535,10 @@ console.log("YAQUOI")
             //         let collection = db.collection("scores");
             //         let insertion = {};
             //         // insertion.
-            //     }
+            //     } 
             // })
-        }  
+        }
+           
     })      
 
     

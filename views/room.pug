@@ -1,7 +1,7 @@
 include includes/head.pug
 
 div#beforePartie
-  form#avatar(action='/room' method='POST')
+  form#avatar(action='/game' method='POST')
       label(for='choix') Choisissez votre avatar:   
       br
       input#avatar1(type='radio' name='image' value='/images/avatar1.png' checked='')
@@ -51,7 +51,7 @@ div#joueurs
     p=present
     img#avatarfinal(src=image alt='')
     p Score : 
-      span#score1 0
+      div#score1 
   div#joueur2
     p=present
     img#avatarfinal(src=image alt='')
