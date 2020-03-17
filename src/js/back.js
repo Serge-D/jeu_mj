@@ -205,7 +205,7 @@ ioClient.on("connect", function(){
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
-            beforePartie.style.display = "none";
+            beforePartie.style.display = "none"; 
 
          
             ioClient.emit("create_room4", roomName, player);
@@ -383,14 +383,14 @@ ioClient.on("connect", function(){
         })
     }
       
-    var scorePlayer = function(playerScore){
-        scoreJ1 = playerScore;
-    }
+
             
     ioClient.on("scores", function(playerScore){
-        // console.log(playerScore);
-        console.log(Object.values(playerScore)[0])
-        scorePlayer(Object.values(playerScore)[0].innerHTML)
+        // console.log(Object.values(playerScore)[0])
+        playerScore = Object.values(playerScore)[0];
+        console.log(scoreJ1);
+        console.log(playerScore);
+        scoreJ1.innerHTML = playerScore;
     }) 
 })
  
