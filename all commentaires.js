@@ -308,3 +308,36 @@ MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,cl
     // console.log("MAMAMAMAMAMAAMAMAMAMA") 
     // console.log(rooms)
     // console.log("YALAAAAAAAAA") 
+
+            // MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+        //     if(err){
+        //         console.log("error");
+        //     }else{
+        //         let db = client.db("jeu_mj");
+        //         let collection = db.collection("rooms");
+        //         collection.find({nomRoom:"Partie 1"}).toArray(function(err,data){
+        //             if(err){
+        //                 console.log("erreur")
+        //             }else{
+        //             collection.update({},{$set:{uuidJoueur: player, nomJoueur: joueur.pseudo}})
+        //             // let uuidPlayer = player;
+        //             // let pseudoPlayer = joueur.pseudo;
+        //             // //FAIT UN UPDATE DU CON
+                    
+                     
+        //         }   
+        //         })
+                    
+        //     }
+              //     MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+        //         if(err){
+        //             console.log("error");
+        //         }else{
+        //             let db = client.db("jeu_mj");
+        //             let collection = db.collection("rooms");
+        //             console.log(collection.find({nomRoom: "Partie 1"}))
+        //         }
+        //     })
+                
+            
+        // })    

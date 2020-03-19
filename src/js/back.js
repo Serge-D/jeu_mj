@@ -25,9 +25,13 @@ var partieDeux = document.getElementById("partieDeux");
 var partieTrois = document.getElementById("partieTrois");
 var partieQuatre = document.getElementById("partieQuatre"); 
 var partieCinq = document.getElementById("partieCinq");
-var joueurs = document.getElementById("joueurs")
+var joueurs = document.getElementById("joueurs");
+var nameJ1 = document.getElementById("nameJ1");
+var nameJ2 = document.getElementById("nameJ2");
 var scoreJ1 = document.getElementById("score1");
 var scoreJ2 = document.getElementById("score2");
+var avatarfinalJ1 = document.getElementById("avatarfinalJ1");
+var avatarfinalJ2 = document.getElementById("avatarfinalJ2");
 var idConnexion = document.getElementById("idConnexion");
 var idInscription = document.getElementById("idInscription");
 var bouttonStart = document.getElementById("bouttonStart");
@@ -80,13 +84,32 @@ ioClient.on("connect", function(){
     submitAvatar.addEventListener("click", function(event){
         event.preventDefault();
         var image = document.querySelector('input[name=image]:checked').value;
+        avatarfinalJ1.src = image;
         console.log(image)
 
-            ioClient.emit("avatar", image)
+        ioClient.emit("avatar", image)
     })
 
-    
 
+    //  function create_room1(){
+    //     let roomName = document.getElementById("roomName").value 
+        
+    //     console.log(roomName)
+    
+    //     setCookie("room", roomName)
+        
+    //     let player = getCookie("user_id");
+    //     console.log(player)
+        
+
+    //     // joueurs.style.display = "flex";
+    //     // bouttonStart.style.display = "block";
+    //     // fenetreDeJeu.style.display = "block";
+    //     // beforePartie.style.display = "none";
+    
+    //     ioClient.emit('create_room1', roomName, player)
+    // }
+    
     
     
     if(boutonRejoindre){
@@ -101,6 +124,7 @@ ioClient.on("connect", function(){
             setCookie("room", roomName)
             
             let player = getCookie("user_id");
+            
 
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
@@ -124,9 +148,10 @@ ioClient.on("connect", function(){
             console.log(roomName);
     
             setCookie("room", roomName) //donne le roomName
+            let cookieRoom = getCookie("room");
     
             let player = getCookie("user_id");
-    
+        
 
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
@@ -134,11 +159,12 @@ ioClient.on("connect", function(){
             beforePartie.style.display = "none";
      
             ioClient.emit("create_room1", roomName, player); 
-    
             // console.log(questionPosée)
         })
     } 
     
+
+
     if(partieDeux){
     
         partieDeux.addEventListener("click", (event)=>{
@@ -286,6 +312,23 @@ ioClient.on("connect", function(){
         document.location.reload();
     })
 
+    ioClient.on("attente", function(attente, joueurJ1){
+        alert(attente);
+        bouttonStart.disabled = true;
+        nameJ1.innerHTML = joueurJ1.player.pseudo;
+        scoreJ1.innerHTML = joueurJ1.score;
+        
+    })
+
+    ioClient.on("joueurJ2", function(joueurJ2, joueurJ1){
+        console.log(joueurJ2, joueurJ1)
+        nameJ1.innerHTML = joueurJ1.player.pseudo;
+        scoreJ1.innerHTML = joueurJ1.score; 
+        nameJ2.innerHTML = joueurJ2.player.pseudo;
+        scoreJ2.innerHTML = joueurJ2.score;
+        
+    })
+
 
     if(bouttonStart){
         bouttonStart.addEventListener("click", function(event){
@@ -382,7 +425,12 @@ ioClient.on("connect", function(){
             ioClient.emit("reponse", data);
         })
     }
-      
+
+    ioClient.on("joueur",function(joueur){
+        console.log(joueur);
+        nameJ1.innerHTML = joueur.pseudo;
+        
+    })
 
             
     ioClient.on("scores", function(playerScore){
@@ -391,7 +439,13 @@ ioClient.on("connect", function(){
         console.log(scoreJ1);
         console.log(playerScore);
         scoreJ1.innerHTML = playerScore;
+        
     }) 
+
+    ioClient.on("disconnect", function(){
+        
+    })
+    
 })
  
 

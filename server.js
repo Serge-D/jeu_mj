@@ -60,6 +60,27 @@ MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, fun
     } 
 }); 
 
+var user;
+
+MongoClient.connect("mongodb://localhost:27017",{useUnifiedTopology:true}, function(err, client){
+    if(err){
+        console.log("error");
+    }else{
+        let db = client.db("jeu_mj");
+        let collection = db.collection("utilisateurs");
+        collection.find({},{projection:{uuid:1, pseudo:1}}).toArray(function(err, data){
+            if(err){
+                console.log("erreur acces");
+            }else{
+                // var pseudoPlayer= data[0].pseudo;
+                console.log(data)
+                user = data;
+            }
+            
+        })
+    }
+})
+console.log(user)
 console.log(questions)
 
 app.use(expressSession(options));
@@ -109,7 +130,7 @@ app.get("/", function (req, res) {
             } else {
                 res.redirect("/home");
             }
-        })
+        }) 
     }
 
 })
@@ -221,6 +242,26 @@ app.post("/connexion", function (req, res) {
 // });
 
 app.get("/room", function (req, res) { 
+    MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+    if(err){
+        console.log("erreur avec mongo")
+    }else{
+        let db = client.db("jeu_mj");
+        let collection = db.collection("scores");
+        let insertion = {};
+        insertion.pseudo = req.session.userName;
+        insertion.uuid = req.session.uuid; 
+        insertion.score = 0;
+        insertion.socketid ;
+        collection.insertOne(insertion, function(err,results){
+            if(err){
+                console.log("erreur d'insertion")
+            }else{
+                console.log("ca marche")
+            }
+        })
+    }
+})
     res.render("room")
 })
 
@@ -248,26 +289,7 @@ app.post("/room", function(req, res){
 
 // })
 
-// MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
-//     if(err){
-//         console.log("erreur avec mongo")
-//     }else{
-//         let db = client.db("jeu_mj");
-//         let collection = db.collection("scores");
-//         let insertion = {};
-//         insertion.pseudo = req.session.userName;
-//         insertion.uuid = req.session.uuid;
-//         var score = 0; 
-//         insertion.score = score;
-//         collection.insertOne(insertion, function(err,results){
-//             if(err){
-//                 console.log("erreur d'insertion")
-//             }else{
-//                 console.log("ca marche")
-//             }
-//         })
-//     }
-// })
+
 
 
 
@@ -295,6 +317,21 @@ webSocketServer.on("connect", function (socket) {
         console.log(image); 
     })
 
+    
+
+    var joueurJ1 = {
+        room:"",
+        player:"",
+        playerId:"",
+        score:""
+    }
+    var joueurJ2 = {
+        room:"",
+        player:"",
+        playerId:"",
+        score:""
+    }
+
     socket.on("create_room1", function(room,player){
         console.log("yal1111111")
         console.log(player)
@@ -302,12 +339,19 @@ webSocketServer.on("connect", function (socket) {
         console.log(socket.rooms)
         console.log(socket.id)
         console.log("yalaaaaaa") 
-        socket.join(room);
+        socket.join(room); 
+
         
+
         var roomOne = webSocketServer.sockets.adapter.rooms[room];
 
         console.log(roomOne)
         console.log(roomOne.length)
+
+        console.log(player)
+
+       
+
         if(roomOne.length > 2){ 
              var message = "Room pleine";
             webSocketServer.sockets.to(socket.id).emit("message", message)
@@ -317,8 +361,37 @@ webSocketServer.on("connect", function (socket) {
         if (!webSocketServer.sockets.adapter.rooms[room].hasOwnProperty("scores")){
             webSocketServer.sockets.adapter.rooms[room]["scores"]={}
         }
-        webSocketServer.sockets.adapter.rooms[room]["scores"][player] = 0;
+        var score = webSocketServer.sockets.adapter.rooms[room]["scores"][player] = 0;
 
+        var joueur = user.find(joueur => joueur.uuid === player)
+        console.log(joueur)
+        console.log(joueur.pseudo)
+        webSocketServer.sockets.in(room).emit('joueur', joueur)
+        
+        if(roomOne.length == 1){
+            joueurJ1.room = room;
+            joueurJ1.player = joueur; 
+            joueurJ1.playerId = player;
+            joueurJ1.score = score;
+            var attente = "Vous êtes seul";
+            webSocketServer.sockets.to(socket.id).emit("attente", attente, joueurJ1)
+        }
+        if(roomOne.length == 2){
+            if(room == "Partie 1"){
+            console.log(socket.rooms)
+            joueurJ1.room = room;
+            joueurJ1.player = joueur; 
+            joueurJ1.playerId = player;
+            joueurJ1.score = score;
+            joueurJ2.room = room;
+            joueurJ2.player = joueur;
+            // joueurJ2.playerId = player;
+            joueurJ2.score = score;
+            webSocketServer.sockets.to(socket.id).emit("joueurJ2", joueurJ2, joueurJ1)
+            }
+  
+        }
+        
     })
 
     
@@ -334,6 +407,11 @@ webSocketServer.on("connect", function (socket) {
 
         console.log(roomTwo)
         console.log(roomTwo.length)
+        if(roomTwo.length == 1){
+            var attente = "Vous êtes seul";
+            webSocketServer.sockets.to(socket.id).emit("attente", attente)
+        }
+
         if(roomTwo.length > 2){ 
              var message = "Room pleine";
             webSocketServer.sockets.to(socket.id).emit("message", message)  
@@ -358,9 +436,14 @@ webSocketServer.on("connect", function (socket) {
 
         console.log(roomThree)
         console.log(roomThree.length)
+        if(roomThree.length == 1){
+            var attente = "Vous êtes seul";
+            webSocketServer.sockets.to(socket.id).emit("attente", attente)
+        }
+
         if(roomThree.length > 2){ 
              var message = "Room pleine";
-            webSocketServer.sockets.to(socket.id).emit("message", message)
+            webSocketServer.sockets.to(socket.id).emit("message", message) 
             socket.leave(room)
         }
 
@@ -382,6 +465,11 @@ webSocketServer.on("connect", function (socket) {
 
         console.log(roomFour)
         console.log(roomFour.length)
+        if(roomFour.length == 1){
+            var attente = "Vous êtes seul";
+            webSocketServer.sockets.to(socket.id).emit("attente", attente)
+        }
+
         if(roomFour.length > 2){ 
              var message = "Room pleine";
             webSocketServer.sockets.to(socket.id).emit("message", message)
@@ -407,6 +495,11 @@ webSocketServer.on("connect", function (socket) {
 
         console.log(roomFive)
         console.log(roomFive.length)
+        if(roomFive.length == 1){
+            var attente = "Vous êtes seul";
+            webSocketServer.sockets.to(socket.id).emit("attente", attente)
+        }
+
         if(roomFive.length > 2){ 
              var message = "Room pleine";
             webSocketServer.sockets.to(socket.id).emit("message", message)
@@ -436,6 +529,11 @@ webSocketServer.on("connect", function (socket) {
 
         console.log(roomPerso)
         console.log(roomPerso.length)
+        if(roomPerso.length == 1){
+            var attente = "Vous êtes seul";
+            webSocketServer.sockets.to(socket.id).emit("attente", attente)
+        }
+
         if(roomPerso.length > 2){ 
              var message = "Room pleine";
             webSocketServer.sockets.to(socket.id).emit("message", message)
@@ -480,8 +578,7 @@ webSocketServer.on("connect", function (socket) {
         var testInterval = setInterval(() => {
             var question = questions[i]
             var response = Object.assign({}, questions[i]);
-            // delete question.solution // LE PROBLEMEEEEEEEE
-            // delete question.anecdote
+
 
 
             console.log(i)
@@ -491,16 +588,16 @@ webSocketServer.on("connect", function (socket) {
                 clearTimeout(testTimeout)
                 return
             }
-            console.log("----LALA----")
-            console.log(room)
-            console.log("emit question", room, question)
-            console.log("----LALA----")
+            // console.log("----LALA----")
+            // console.log(room)
+            // console.log("emit question", room, question)
+            // console.log("----LALA----")
             webSocketServer.sockets.in(room).emit('questions', question)
             
             var testTimeout = setTimeout(() => {
-                console.log("------------ICI------------")
-                console.log("emit response", room, response)
-                console.log("------------ICI------------")
+                // console.log("------------ICI------------")
+                // console.log("emit response", room, response)
+                // console.log("------------ICI------------")
                 webSocketServer.sockets.in(room).emit('response', response)  
             }, 3000)
             i++
@@ -508,35 +605,58 @@ webSocketServer.on("connect", function (socket) {
             console.log(i) 
             console.log("-----TAPUTINDETAMERE-------")
         }, 6000);
+ 
 
-console.log("YAQUOI")
-});
+        console.log("YAQUOI")
+    });
 
     socket.on("reponse", function(data){
         let solution = questions[parseFloat(data.question.split("question ")[1])-1].solution;
         console.log(data);
+        console.log(socket.id)
         console.log(solution);
+
+        MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+            if(err){
+                console.log("erreur avec mongo") 
+            }else{
+                let db = client.db("jeu_mj");
+                let collection = db.collection("scores");
+                collection.findOne({},{projection:{uuid:1}})
+                    if(err){
+                        console.log("error")
+                    }
+                    collection.updateOne({},{$set:{socketid: socket.id}})
+                }
+            })
+
         if(solution == data.reponse){ 
             console.log("score + 1!")
         
             var _room =  webSocketServer.sockets.adapter.rooms[data.room];
             console.log(_room) 
-            _room["scores"][data.userId] += 1;
+            _room["scores"][data.userId] += 1; 
             var playerScore = _room["scores"]
-            webSocketServer.sockets.in(data.room).emit("scores",playerScore); 
+            webSocketServer.sockets.in(data.room).emit("scores",playerScore);
+            console.log("SCOREEEEEEEEEEEEEEEEEEEEEEEE") 
             console.log(webSocketServer.sockets.adapter.rooms[data.room]);
             console.log(_room["scores"])
 
-            //  MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
-            //     if(err){
-            //         console.log("erreur avec mongo") 
-            //     }else{
-            //         let db = client.db("jeu_mj");
-            //         let collection = db.collection("scores");
-            //         let insertion = {};
-            //         // insertion.
-            //     } 
-            // })
+            MongoClient.connect("mongodb://localhost:27017", {useUnifiedTopology: true}, function (err, client){
+                if(err){
+                    console.log("erreur avec mongo") 
+                }else{
+                    let db = client.db("jeu_mj");
+                    let collection = db.collection("scores");
+                    collection.findOne({},{projection:{uuid:1}})
+                        if(err){
+                            console.log("error")
+                        }
+                        collection.updateOne({},{$inc:{score:1}})   
+                    
+
+                }
+            })
         }
            
     })      

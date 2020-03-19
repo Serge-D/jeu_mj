@@ -282,6 +282,14 @@ p {
     text-align: center;
     color: aliceblue;
 }
+
+#scoreJ1{
+    font-family: "Comic Sans MS", serif;
+}
+
+#scoreJ2{
+    font-family: "Comic Sans MS", serif;
+}
 /* Images */
 
 form img {
@@ -300,7 +308,12 @@ form img {
     width: max-content;
 }
 
-#avatarfinal {
+#avatarfinalJ1 {
+    height: 50px;
+    width: 50px;
+}
+
+#avatarfinalJ2 {
     height: 50px;
     width: 50px;
 }
