@@ -1,7 +1,6 @@
 "use strict"
 
 
-
 console.log("prout")
 var ioClient;
 var numQuestion = window.document.getElementById("numQuestion")
@@ -18,7 +17,6 @@ var fenetreDeJeu = window.document.getElementById("fenetreDeJeu");
 var allForm = window.document.getElementById("allForm");
 var buttonConnexion = document.getElementById("connexion");
 var buttonInscription = document.getElementById("inscription");
-var formInscription = document.getElementById("formConnexion");
 var boutonRejoindre = document.getElementById("boutonRejoindre");
 var partieUne = document.getElementById("partieUne");
 var partieDeux = document.getElementById("partieDeux");
@@ -81,6 +79,9 @@ ioClient.on("connect", function(){
     
     
     
+
+
+
     submitAvatar.addEventListener("click", function(event){
         event.preventDefault();
         var image = document.querySelector('input[name=image]:checked').value;
@@ -91,51 +92,31 @@ ioClient.on("connect", function(){
     })
 
 
-    //  function create_room1(){
-    //     let roomName = document.getElementById("roomName").value 
-        
-    //     console.log(roomName)
     
-    //     setCookie("room", roomName)
-        
-    //     let player = getCookie("user_id");
-    //     console.log(player)
-        
-
-    //     // joueurs.style.display = "flex";
-    //     // bouttonStart.style.display = "block";
-    //     // fenetreDeJeu.style.display = "block";
-    //     // beforePartie.style.display = "none";
+    // if(boutonRejoindre){
     
-    //     ioClient.emit('create_room1', roomName, player)
-    // }
-    
-    
-    
-    if(boutonRejoindre){
-    
-        boutonRejoindre.addEventListener("click", (event)=>{
-            event.preventDefault();
+    //     boutonRejoindre.addEventListener("click", (event)=>{
+    //         event.preventDefault();
             
-            let roomName = document.getElementById("roomName").value 
+    //         let roomName = document.getElementById("roomName").value 
         
-            console.log(roomName)
+    //         console.log(roomName)
         
-            setCookie("room", roomName)
+    //         setCookie("room", roomName)
             
-            let player = getCookie("user_id");
+    //         let uuidPlayer = getCookie("user_id");
             
 
-            joueurs.style.display = "flex";
-            bouttonStart.style.display = "block";
-            fenetreDeJeu.style.display = "block";
-            beforePartie.style.display = "none";
+    //         joueurs.style.display = "flex";
+    //         bouttonStart.style.display = "block";
+    //         fenetreDeJeu.style.display = "block";
+    //         beforePartie.style.display = "none";
         
-            ioClient.emit('create_room', roomName, player)
+    //         ioClient.emit('create_room', roomName, uuidPlayer)
             
-            // console.log(questionPosée)
-        });
-    }   
+    //         // console.log(questionPosée)
+    //     });
+    // }   
     
     if(partieUne){
     
@@ -148,17 +129,17 @@ ioClient.on("connect", function(){
             console.log(roomName);
     
             setCookie("room", roomName) //donne le roomName
-            let cookieRoom = getCookie("room");
+            
     
-            let player = getCookie("user_id");
-        
+            let uuidPlayer = getCookie("user_id");
+            
 
             joueurs.style.display = "flex";
             bouttonStart.style.display = "block";
             fenetreDeJeu.style.display = "block";
             beforePartie.style.display = "none";
      
-            ioClient.emit("create_room1", roomName, player); 
+            ioClient.emit("joinroom", roomName, uuidPlayer); 
             // console.log(questionPosée)
         })
     } 
@@ -184,7 +165,7 @@ ioClient.on("connect", function(){
             fenetreDeJeu.style.display = "block";
             beforePartie.style.display = "none";
             
-            ioClient.emit("create_room2", roomName, player);
+            ioClient.emit("joinroom", roomName, player);
             // console.log(questionPosée)
         })
     }
@@ -307,17 +288,24 @@ ioClient.on("connect", function(){
         reponseD.disabled = true;
     })
 
-    ioClient.on("message",function(message){
-        alert(message);
-        document.location.reload();
-    })
-
-    ioClient.on("attente", function(attente, joueurJ1){
+    ioClient.on("attente", function(attente, roomOne){
         alert(attente);
         bouttonStart.disabled = true;
-        nameJ1.innerHTML = joueurJ1.player.pseudo;
-        scoreJ1.innerHTML = joueurJ1.score;
-        
+        nameJ1.innerHTML = roomOne.joueurs[0].pseudo;
+        scoreJ1.innerHTML = roomOne.joueurs[0].score;
+    })
+
+    ioClient.on("message",function(message, roomOne){
+        alert(message);
+        nameJ1.innerHTML = roomOne.joueurs[0].pseudo;
+        scoreJ1.innerHTML = roomOne.joueurs[0].score;
+        nameJ2.innerHTML = roomOne.joueurs[1].pseudo;
+        scoreJ2.innerHTML = roomOne.joueurs[1].score; 
+    })
+
+    ioClient.on("alerte", function(alerte, roomOne){
+        alert(alerte);
+        document.location.reload();
     })
 
     ioClient.on("joueurJ2", function(joueurJ2, joueurJ1){
@@ -426,25 +414,27 @@ ioClient.on("connect", function(){
         })
     }
 
-    ioClient.on("joueur",function(joueur){
-        console.log(joueur);
-        nameJ1.innerHTML = joueur.pseudo;
+    // ioClient.on("joueur",function(joueur){
+    //     console.log(joueur);
+    //     nameJ1.innerHTML = joueur.pseudo; 
         
-    })
+    // })
 
             
-    ioClient.on("scores", function(playerScore){
+    ioClient.on("scores", function(joueurs){
         // console.log(Object.values(playerScore)[0])
-        playerScore = Object.values(playerScore)[0];
-        console.log(scoreJ1);
-        console.log(playerScore);
-        scoreJ1.innerHTML = playerScore;
+        // playerScore = Object.values(playerScore)[0];
         
+        console.log(joueurs);
+        scoreJ1.innerHTML = joueurs[0].score;
+        scoreJ2.innerHTML = joueurs[1].score;
+
     }) 
 
-    ioClient.on("disconnect", function(){
-        
-    })
+    // ioClient.on("finDePartie", function(){
+    //     ioClient.emit("deconnexion");
+    //     document.location.reload();
+    // })
     
 })
  

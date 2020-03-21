@@ -341,3 +341,58 @@ MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,cl
                 
             
         // })    
+
+
+
+// app.get("/jeu", function (req, res) {
+//     res.render("jeu");
+// });
+
+
+// app.post("/game", function (req, res) {
+//     // res.render("jeu", {present: req.session.userName, image: req.session.avatar})
+//     res.redirect("/game")
+// })
+
+// app.get("/game", (req, res) => {
+ 
+//     res.render("jeu", {
+//         present: req.session.userName,
+//         image: req.session.avatar
+//     })
+
+// })
+
+        // socket.on("create_room", function (roomName, player) {
+        
+       
+        //     console.log("ici c'est les rooms")
+        //     console.log(roomName)
+        //     console.log(player)
+        //     console.log("------------------")
+        //     socket.join(roomName);
+    
+        //     var roomPerso = webSocketServer.sockets.adapter.rooms[roomName];
+    
+        //     console.log(roomPerso)
+        //     console.log(roomPerso.length)
+        //     if(roomPerso.length == 1){
+        //         var attente = "Vous êtes seul";
+        //         webSocketServer.sockets.to(socket.id).emit("attente", attente)
+        //     }
+    
+        //     if(roomPerso.length > 2){ 
+        //          var message = "Room pleine";
+        //         webSocketServer.sockets.to(socket.id).emit("message", message)
+        //         socket.leave(roomName)
+        //     }
+    
+        //     if (!webSocketServer.sockets.adapter.rooms[roomName].hasOwnProperty("scores")){
+        //         webSocketServer.sockets.adapter.rooms[roomName]["scores"]={}
+        //     }
+        //     webSocketServer.sockets.adapter.rooms[roomName]["scores"][player] = 0
+            
+     
+     
+        // });
+    
