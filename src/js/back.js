@@ -431,10 +431,10 @@ ioClient.on("connect", function(){
 
     }) 
 
-    // ioClient.on("finDePartie", function(){
-    //     ioClient.emit("deconnexion");
-    //     document.location.reload();
-    // })
+    ioClient.on("finDePartie", function(room){
+        ioClient.emit("deconnexion",room);
+        document.location.reload();
+    })
     
 })
  

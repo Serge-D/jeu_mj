@@ -73,7 +73,7 @@ MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, f
                 console.log("erreur acces");
             } else {
                 // var pseudoPlayer= data[0].pseudo;
-                console.log(data)
+                // console.log(data)
                 user = data;
             }
 
@@ -329,6 +329,7 @@ webSocketServer.on("connect", function (socket) {
     console.log("connected to the client");
 
     socket.on("joinroom", function (roomName, uuidPlayer, avatar) {
+        console.log("On Rentre dans JOINROOM", roomName)
         var room = rechercheRoom(roomName)
         console.log(roomName);
         console.log(uuidPlayer);
@@ -337,6 +338,8 @@ webSocketServer.on("connect", function (socket) {
 
         var pseudo = user.find(joueur => joueur.uuid === uuidPlayer).pseudo
         console.log(pseudo)
+
+
 
         if(room.joueurs.length < 2){
             var joueur = {
@@ -347,14 +350,17 @@ webSocketServer.on("connect", function (socket) {
                 roomName : roomName,
                 socketId : socket.id, 
             }
+            socket.joueur = joueur;
+            room.joueurs.push(joueur);
+            console.log(room.joueurs.length)
+            console.log(room)
+            console.log("PPPP")
+            console.log(socket.joueur)
+            socket.join(roomName);
+        }else{
+            var alerte = "Room pleine";
+            webSocketServer.sockets.to(socket.id).emit("alerte", alerte)
         }
-        socket.joueur = joueur;
-        room.joueurs.push(joueur);
-        console.log(room.joueurs.length)
-        console.log(room)
-        console.log("PPPP")
-        console.log(socket.joueur)
-        socket.join(roomName);
 
 
         if(room.joueurs.length === 1){
@@ -365,47 +371,7 @@ webSocketServer.on("connect", function (socket) {
             var message = "La partie va pouvoir commencer";
             webSocketServer.sockets.to(roomName).emit("message", message, room)
         }
-        if(room.joueurs.length > 2){
-            var alerte = "Room pleine";
-            webSocketServer.sockets.to(socket.id).emit("alerte", alerte)
-        }
-        // VRA
-        // 0) un seul evenement 'joinroom', le discriminant c'est le nom de la room passé en argument
-        // 1) récupérer le pseudo et autres data du joueur grâce à l'uuid
-        // 2) find de la room dans la liste 'rooms' 
-        // 3) alimenter la room avec le joueur
-        
-        /* TODO
-       1)  uuid avec cookie 
-        2)chercher la room correspondante par exemple roomOne.nom = roomName
-        3)if (rooms[?].joueurs.length < 2) { 
-        
-            var joueur = { 
-                pseudo:session.pseudo,
-                uuid: uuidPlayer, // si besoin
-                score: 0,
-                avatar: avatar,
-                roomName : roomName,
-                socketid : socket.id
-                //etc... si besoin
-            }
-
-            socket.joueur = joueur //Important !
-
-            rooms[indice].joueurs.push(joueurs) // syntaxe push à vérifier
-            socket.join(room);            
-            webSocketServer.sockets.in(room).emit('joueur', roomOne)
-            if (rooms[indice].joueurs.length === 1) {
-                var attente = "Vous êtes seul";
-                webSocketServer.sockets.to(socket.id).emit("attente", attente, joueur);
-            }
-        } else 
-        {
-            var message = "Room pleine";
-            webSocketServer.sockets.to(socket.id).emit("message", message);
-                        
-        }
-        */       
+          
          
         
 
@@ -446,8 +412,7 @@ webSocketServer.on("connect", function (socket) {
             // console.log(questions[i])
             if (i >= 10) {
                 //enregistrer mes scores 
-                
-                
+                webSocketServer.sockets.in(room).emit("finDePartie", room)
                 clearInterval(testInterval);
                 clearTimeout(testTimeout);
                 return
@@ -498,7 +463,8 @@ webSocketServer.on("connect", function (socket) {
     })
 
 
-    socket.on("deconnexion", function(){
+    socket.on("deconnexion", function(room){
+        rechercheRoom(room).joueurs = [];
         socket.disconnect();
     })
 
