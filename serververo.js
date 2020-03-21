@@ -346,7 +346,6 @@ webSocketServer.on("connect", function (socket) {
                 pseudo : pseudo,
                 uuid : uuidPlayer,
                 score : 0,
-                avatar : avatar,
                 roomName : roomName,
                 socketId : socket.id, 
             }
@@ -406,12 +405,35 @@ webSocketServer.on("connect", function (socket) {
             var question = questions[i];
             var response = Object.assign({}, questions[i]);
 
-
+            
 
             // console.log(i)
             // console.log(questions[i])
-            if (i >= 10) {
-                //enregistrer mes scores 
+            if (i >= 5) {
+                // var salle = rechercheRoom(room)
+                // MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client){
+                //     if(err){
+                //         console.log("erreur")
+                //     }else{
+                //         let db = client.db("jeu_mj");
+                //         let collection = db.collection("scores");
+                //         let insertion =[
+                //                         {pseudo:salle.joueurs[0].pseudo,score: salle.joueurs[0].score},
+                //                         {pseudo:salle.joueurs[1].pseudo,score: salle.joueurs[1].score}
+                //                         ];
+
+
+                //         collection.insert(insertion, function(err,results){
+                //             if(err){
+                //                 console.log("erreur d'insertion");
+                //             }else{
+                //                 console.log("insertion réussie")
+                //             }
+                //         })
+                //     }
+                // })
+
+
                 webSocketServer.sockets.in(room).emit("finDePartie", room)
                 clearInterval(testInterval);
                 clearTimeout(testTimeout);
@@ -464,6 +486,27 @@ webSocketServer.on("connect", function (socket) {
 
 
     socket.on("deconnexion", function(room){
+        MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client){
+                    if(err){
+                        console.log("erreur")
+                    }else{
+                        let db = client.db("jeu_mj");
+                        let collection = db.collection("scores");
+                        let insertion =[
+                                        {pseudo:socket.joueur.pseudo, score: socket.joueur.score},
+                                        ];
+
+
+                        collection.insert(insertion, function(err,results){
+                            if(err){
+                                console.log("erreur d'insertion");
+                            }else{
+                                console.log("insertion réussie")
+                            }
+                        })
+                    }
+                })
+
         rechercheRoom(room).joueurs = [];
         socket.disconnect();
     })

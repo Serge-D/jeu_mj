@@ -1,7 +1,6 @@
 "use strict"
 
 
-console.log("prout")
 var ioClient;
 var numQuestion = window.document.getElementById("numQuestion")
 var theme = window.document.getElementById("theme");
