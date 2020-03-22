@@ -396,3 +396,128 @@ MongoClient.connect("mongodb://localhost:27017",{useNewUrlParser: true}, (err,cl
      
         // });
     
+
+            //- form(action="/game" method="POST" name="Partie-4")
+    //-   //- label(for='partie4')  Partie 4 
+    //-   input#partieQuatre(type='submit' value='Partie-4')
+    //- form(action="/game" method="POST" name="Partie-5")
+    //-   //- label(for='partie5')  Partie 5
+    //-   input#partieCinq(type='submit' value='Partie-5')
+    //- form#startGame(action="/game" method="POST" name="fileinfo")
+    //-   label(for="partie perso") Partie Personnalisé
+    //-   br
+    //-   input#roomName(type="text")  
+    //-   input#boutonRejoindre(type="submit" value="Rejoindre") 
+
+    // if(partieQuatre){
+    
+        //     partieQuatre.addEventListener("click", (event)=>{
+        //         console.log("room Partie Quatre");
+        //         event.preventDefault();
+        
+        //         let roomName = document.getElementById("partieQuatre").value
+        
+        //         console.log(roomName);
+        
+        //         setCookie("room", roomName)
+        
+        //         let player = getCookie("user_id");
+    
+        //         joueurs.style.display = "flex";
+        //         bouttonStart.style.display = "block";
+        //         fenetreDeJeu.style.display = "block";
+        //         beforePartie.style.display = "none"; 
+    
+             
+        //         ioClient.emit("joinroom", roomName, player);
+        //         // console.log(questionPosée)
+        //     })
+        // }
+        
+        // if(partieCinq){
+        
+        //     partieCinq.addEventListener("click", (event)=>{
+        //         console.log("room Partie Cinq");
+        //         event.preventDefault();
+        
+        //         let roomName = document.getElementById("partieCinq").value
+        
+        //         console.log(roomName);
+        
+        //         setCookie("room", roomName)
+        
+        //         let player = getCookie("user_id");
+    
+        //         joueurs.style.display = "flex";
+        //         bouttonStart.style.display = "block";
+        //         fenetreDeJeu.style.display = "block";
+        //         beforePartie.style.display = "none";
+        
+        //         ioClient.emit("joinroom", roomName, player);
+        //         // console.log(questionPosée)
+        //     })
+        // }})
+
+
+         // var salle = rechercheRoom(room)
+                // MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client){
+                //     if(err){
+                //         console.log("erreur")
+                //     }else{
+                //         let db = client.db("jeu_mj");
+                //         let collection = db.collection("scores");
+                //         let insertion =[
+                //                         {pseudo:salle.joueurs[0].pseudo,score: salle.joueurs[0].score},
+                //                         {pseudo:salle.joueurs[1].pseudo,score: salle.joueurs[1].score}
+                //                         ];
+
+
+                //         collection.insert(insertion, function(err,results){
+                //             if(err){
+                //                 console.log("erreur d'insertion");
+                //             }else{
+                //                 console.log("insertion réussie")
+                //             }
+                //         })
+                //     }
+                // })
+
+     /* VRA -- supprimer
+        if (webSocketServer.sockets.adapter.rooms[room]["start"] == true) {
+            return
+        } else {
+            webSocketServer.sockets.adapter.rooms[room]["start"] = true
+        }
+
+        console.log("bbbbbbbbbbbbbbb")
+        console.log(socket.adapter.rooms)
+        console.log("RECU EMIT START GAME")
+        console.log("room", room)
+        console.log(webSocketServer.sockets.adapter.rooms)
+
+        console.log(webSocketServer.nsps['/'].adapter.rooms)
+        console.log("bbbbbbbbbbbbbbb")
+        // socket.join(room)
+        console.log(socket.rooms)
+        
+        console.log(webSocketServer.sockets.adapter.rooms)
+        */ /* VRA -- supprimer
+        if (webSocketServer.sockets.adapter.rooms[room]["start"] == true) {
+            return
+        } else {
+            webSocketServer.sockets.adapter.rooms[room]["start"] = true
+        }
+
+        console.log("bbbbbbbbbbbbbbb")
+        console.log(socket.adapter.rooms)
+        console.log("RECU EMIT START GAME")
+        console.log("room", room)
+        console.log(webSocketServer.sockets.adapter.rooms)
+
+        console.log(webSocketServer.nsps['/'].adapter.rooms)
+        console.log("bbbbbbbbbbbbbbb")
+        // socket.join(room)
+        console.log(socket.rooms)
+        
+        console.log(webSocketServer.sockets.adapter.rooms)
+        */

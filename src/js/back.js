@@ -34,7 +34,8 @@ var idInscription = document.getElementById("idInscription");
 var bouttonStart = document.getElementById("bouttonStart");
 var messageAlerte = document.getElementById("message");
 var beforePartie = document.getElementById("beforePartie");
-var submitavatar = document.getElementById("submitAvatar")
+var submitavatar = document.getElementById("submitAvatar");
+var instructions = document.getElementById("instructions");
 
 
 // console.log(bouttonStart)
@@ -79,43 +80,6 @@ ioClient.on("connect", function(){
     
     
 
-
-
-    submitAvatar.addEventListener("click", function(event){
-        event.preventDefault();
-        var image = document.querySelector('input[name=image]:checked').value;
-        avatarfinalJ1.src = image;
-        console.log(image)
-
-        ioClient.emit("avatar", image)
-    })
-
-
-    
-    // if(boutonRejoindre){
-    
-    //     boutonRejoindre.addEventListener("click", (event)=>{
-    //         event.preventDefault();
-            
-    //         let roomName = document.getElementById("roomName").value 
-        
-    //         console.log(roomName)
-        
-    //         setCookie("room", roomName)
-            
-    //         let uuidPlayer = getCookie("user_id");
-            
-
-    //         joueurs.style.display = "flex";
-    //         bouttonStart.style.display = "block";
-    //         fenetreDeJeu.style.display = "block";
-    //         beforePartie.style.display = "none";
-        
-    //         ioClient.emit('create_room', roomName, uuidPlayer)
-            
-    //         // console.log(questionPosée)
-    //     });
-    // }   
     
     if(partieUne){
     
@@ -189,59 +153,12 @@ ioClient.on("connect", function(){
             fenetreDeJeu.style.display = "block";
             beforePartie.style.display = "none";
     
-            ioClient.emit("create_room3", roomName, player);
+            ioClient.emit("joinroom", roomName, player);
             // console.log(questionPosée)
         })
     }
     
-    if(partieQuatre){
     
-        partieQuatre.addEventListener("click", (event)=>{
-            console.log("room Partie Quatre");
-            event.preventDefault();
-    
-            let roomName = document.getElementById("partieQuatre").value
-    
-            console.log(roomName);
-    
-            setCookie("room", roomName)
-    
-            let player = getCookie("user_id");
-
-            joueurs.style.display = "flex";
-            bouttonStart.style.display = "block";
-            fenetreDeJeu.style.display = "block";
-            beforePartie.style.display = "none"; 
-
-         
-            ioClient.emit("create_room4", roomName, player);
-            // console.log(questionPosée)
-        })
-    }
-    
-    if(partieCinq){
-    
-        partieCinq.addEventListener("click", (event)=>{
-            console.log("room Partie Cinq");
-            event.preventDefault();
-    
-            let roomName = document.getElementById("partieCinq").value
-    
-            console.log(roomName);
-    
-            setCookie("room", roomName)
-    
-            let player = getCookie("user_id");
-
-            joueurs.style.display = "flex";
-            bouttonStart.style.display = "block";
-            fenetreDeJeu.style.display = "block";
-            beforePartie.style.display = "none";
-    
-            ioClient.emit("create_room5", roomName, player);
-            // console.log(questionPosée)
-        })
-    }
     
      
     var questionPosée = function(questions){
@@ -413,16 +330,11 @@ ioClient.on("connect", function(){
         })
     }
 
-    // ioClient.on("joueur",function(joueur){
-    //     console.log(joueur);
-    //     nameJ1.innerHTML = joueur.pseudo; 
-        
-    // })
+ 
 
             
     ioClient.on("scores", function(joueurs){
-        // console.log(Object.values(playerScore)[0])
-        // playerScore = Object.values(playerScore)[0];
+
         
         console.log(joueurs);
         scoreJ1.innerHTML = joueurs[0].score;
@@ -436,14 +348,8 @@ ioClient.on("connect", function(){
     })
     
 })
- 
 
-// console.log(bouttonStart) 
   
-
-
-
-
 
 
 

@@ -1,25 +1,7 @@
 include includes/head.pug
 
 div#beforePartie
-  form#avatar(action='/game' method='POST')
-      label(for='choix') Choisissez votre avatar:   
-      br
-      input#avatar1(type='radio' name='image' value='/images/avatar1.png' checked='')
-      label(for='') Avatar 1
-      img(src='/images/avatar1.png' alt='')
-      input#avatar2(type='radio' name='image' value='/images/avatar8.png')
-      label(for='') Avatar 2
-      img(src='/images/avatar8.png' alt='')
-      input#avatar3(type='radio' name='image' value='/images/avatar3.png')
-      label(for='') Avatar 3
-      img(src='/images/avatar3.png' alt='')
-      input#avatar4(type='radio' name='image' value='/images/avatar9.png')
-      label(for='') Avatar 4
-      img(src='/images/avatar9.png' alt='')
-      input#avatar5(type='radio' name='image' value='/images/avatar10.png')
-      label(for='') Avatar 5
-      img(src='/images/avatar10.png' alt='')
-      input#submitAvatar(type='submit' value='Valider')
+  
 
   p#titreForm Choissisez votre Partie 
   div#allForm
@@ -33,30 +15,24 @@ div#beforePartie
     form(action="/game" method="POST" name="Partie-3")
       //- label(for='partie3')  Partie 3 
       input#partieTrois(type='submit' value='Partie-3')
-    form(action="/game" method="POST" name="Partie-4")
-      //- label(for='partie4')  Partie 4 
-      input#partieQuatre(type='submit' value='Partie-4')
-    form(action="/game" method="POST" name="Partie-5")
-      //- label(for='partie5')  Partie 5
-      input#partieCinq(type='submit' value='Partie-5')
-    //- form#startGame(action="/game" method="POST" name="fileinfo")
-    //-   label(for="partie perso") Partie Personnalisé
-    //-   br
-    //-   input#roomName(type="text")  
-    //-   input#boutonRejoindre(type="submit" value="Rejoindre") 
 
+
+  #affichageScore
+    h2 Les 10 meilleurs scores
+    each score in gameur
+      div= "Pseudo: "+score.pseudo+" "+"  Score: "+ score.score+"/25"
 
 div#joueurs
   div#joueur1
     p
       span#nameJ1
-    img#avatarfinalJ1(src="" alt='')
+    img#avatarfinalJ1(src="../images/avatar1.png" alt='img1')
     p Score : 
       span#score1 
   div#joueur2
     p
       span#nameJ2
-    img#avatarfinalJ2(src="" alt='')
+    img#avatarfinalJ2(src="../images/avatar10.png" alt='img2')
     p Score : 
       span#score2 
 
@@ -64,19 +40,7 @@ input#bouttonStart(type="button" value="Jouer")
 
 #message
 
-#instructions
-  p
-    | Bienvenue dans ce Quiz
-  p
-    | Vous avez plusieurs parties disponibles pour jouer.
-    | Chaque partie se joue en un contre un. Si vous &ecirc;tes le premier arriver vous devrait attendre la deuxi&egrave;me
-    | personne pour commencer la partie.
-    | C&apos;est la deuxi&egrave;me personne qui pourra lancer la partie. Cette derni&egrave;re comporte 25 questions et vous avez un
-    | temps imparti pour y r&eacute;pondre.
-    | Chaque question rapporte un point et la personne qui a le plus de point remporte la partie.
-  p
-    | Bon jeu !!
-    | (Un ajout de question se fera prochainement !)
+
 
 
 section

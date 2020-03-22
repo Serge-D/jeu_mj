@@ -236,21 +236,6 @@ app.post("/connexion", function (req, res) {
 
 
 
-
-// app.get("/avatar", function (req, res) {
-//     res.render("avatar", {
-//         mess: "Bienvenue " + req.session.userName
-//     });
-// });
-
-
-
-// app.post("/avatar", function (req, res) {
-//     req.session.avatar = req.body.image // => user values?
-//     console.log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-//     res.redirect("/room")
-// });
-
 app.get("/room", function (req, res) {
     MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client) {
         if (err) {
@@ -258,46 +243,25 @@ app.get("/room", function (req, res) {
         } else {
             let db = client.db("jeu_mj");
             let collection = db.collection("scores");
-            let insertion = {};
-            insertion.pseudo = req.session.userName;
-            insertion.uuid = req.session.uuid;
-            insertion.score = 0;
-            insertion.socketid;
-            collection.insertOne(insertion, function (err, results) {
+            collection.find({}).sort({score:-1}).limit(10).toArray(function(err,data){
                 if (err) {
                     console.log("erreur d'insertion")
                 } else {
-                    console.log("ca marche")
+                    console.log(data)
+                    var tabScore = {};
+                    tabScore.gameur = data;
+                    res.render("room", tabScore)
                 }
             })
         }
     })
-    res.render("room")
 })
 
-app.post("/room", function (req, res) {
-    req.session.avatar = req.body.image;
-})
-
-
-// app.get("/jeu", function (req, res) {
-//     res.render("jeu");
-// });
-
-
-// app.post("/game", function (req, res) {
-//     // res.render("jeu", {present: req.session.userName, image: req.session.avatar})
-//     res.redirect("/game")
+// app.post("/room", function (req, res) {
+//     res.render("room")
 // })
 
-// app.get("/game", (req, res) => {
 
-//     res.render("jeu", {
-//         present: req.session.userName,
-//         image: req.session.avatar
-//     })
-
-// })
 
 
 
@@ -314,7 +278,8 @@ const webSocketServer = io(serverHTTP);
 
 const rooms = [
     {nom: "Partie-1", joueurs:[]},
-    {nom: "Partie-2", joueurs:[]}
+    {nom: "Partie-2", joueurs:[]},
+    {nom: "Partie-3", joueurs:[]}
 ]
 var rechercheRoom = function(roomName){
     for(let i=0; i < rooms.length;i++){
@@ -379,26 +344,7 @@ webSocketServer.on("connect", function (socket) {
     
     socket.on("start", function (room) {
         console.log(room)
-        /* VRA -- supprimer
-        if (webSocketServer.sockets.adapter.rooms[room]["start"] == true) {
-            return
-        } else {
-            webSocketServer.sockets.adapter.rooms[room]["start"] = true
-        }
-
-        console.log("bbbbbbbbbbbbbbb")
-        console.log(socket.adapter.rooms)
-        console.log("RECU EMIT START GAME")
-        console.log("room", room)
-        console.log(webSocketServer.sockets.adapter.rooms)
-
-        console.log(webSocketServer.nsps['/'].adapter.rooms)
-        console.log("bbbbbbbbbbbbbbb")
-        // socket.join(room)
-        console.log(socket.rooms)
-        
-        console.log(webSocketServer.sockets.adapter.rooms)
-        */
+       
        var i =0;
 
         var testInterval = setInterval(() => {
@@ -409,29 +355,8 @@ webSocketServer.on("connect", function (socket) {
 
             // console.log(i)
             // console.log(questions[i])
-            if (i >= 5) {
-                // var salle = rechercheRoom(room)
-                // MongoClient.connect("mongodb://localhost:27017", { useUnifiedTopology: true }, function (err, client){
-                //     if(err){
-                //         console.log("erreur")
-                //     }else{
-                //         let db = client.db("jeu_mj");
-                //         let collection = db.collection("scores");
-                //         let insertion =[
-                //                         {pseudo:salle.joueurs[0].pseudo,score: salle.joueurs[0].score},
-                //                         {pseudo:salle.joueurs[1].pseudo,score: salle.joueurs[1].score}
-                //                         ];
-
-
-                //         collection.insert(insertion, function(err,results){
-                //             if(err){
-                //                 console.log("erreur d'insertion");
-                //             }else{
-                //                 console.log("insertion réussie")
-                //             }
-                //         })
-                //     }
-                // })
+            if (i >= 25) {
+               
 
 
                 webSocketServer.sockets.in(room).emit("finDePartie", room)
@@ -450,12 +375,12 @@ webSocketServer.on("connect", function (socket) {
                 // console.log("emit response", room, response)
                 // console.log("------------ICI------------")
                 webSocketServer.sockets.in(room).emit('response', response)
-            }, 3000)
+            }, 4000)
             i++
             // console.log("-----TAPUTINDETAMERE-------")
             // console.log(i)
             // console.log("-----TAPUTINDETAMERE-------")
-        }, 6000);
+        }, 9000);
 
 
         console.log("YAQUOI")

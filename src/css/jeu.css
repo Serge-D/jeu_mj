@@ -2,7 +2,7 @@ body {
     background-image: url(../images/fond.png);
     background-repeat: no-repeat;
     background-size: cover;
-
+    background-attachment: fixed;
 }
 
 /* header */
@@ -19,6 +19,12 @@ h1 {
 p {
     font-family: 'Comic Sans MS',serif;
     font-size: 1.4em;
+}
+
+#instructions{
+    border: 2px solid;
+    color: white;
+    text-align: center;
 }
 
 #formInscription label {
@@ -42,7 +48,7 @@ p {
     position: absolute;
     right: 0;
     left: 250px;
-    top: 470px;
+    top: 490px;
     margin-left: auto;
     margin-right: auto;
     align-items: center;
@@ -64,7 +70,7 @@ p {
     left: 0;
     margin-left: auto;
     margin-right: auto;
-    top: 470px;
+    top: 490px;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -96,7 +102,15 @@ p {
     color: yellowgreen;
 }
 
-
+#affichageScore{
+    border: 2px solid;
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+    width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+}
 
 #formulaire {
     text-align: center;
