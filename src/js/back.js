@@ -1,5 +1,6 @@
 "use strict"
 
+/************** Definition des différentes variables ******************/
 
 var ioClient;
 var numQuestion = window.document.getElementById("numQuestion")
@@ -38,7 +39,8 @@ var submitavatar = document.getElementById("submitAvatar");
 var instructions = document.getElementById("instructions");
 
 
-// console.log(bouttonStart)
+// gestion des cookies
+
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -79,7 +81,7 @@ ioClient.on("connect", function(){
     
     
     
-
+    // Evenements permettant de rejoindre les rooms avec les données côté client à envoyer
     
     if(partieUne){
     
@@ -160,7 +162,9 @@ ioClient.on("connect", function(){
     
     
     
-     
+    // définition de l'affichage des questions et réponses
+    
+    
     var questionPosée = function(questions){
     
         theme.innerHTML= questions.theme;
@@ -178,7 +182,8 @@ ioClient.on("connect", function(){
         anecdote.innerHTML = questions.anecdote;
     }
     
-    // console.log(questionPosée)
+    
+    // Gestion de la fenetre de jeu pendant le jeu
     
     ioClient.on("questions", function(question){
         // console.log(question)
@@ -204,35 +209,35 @@ ioClient.on("connect", function(){
         reponseD.disabled = true;
     })
 
-    ioClient.on("attente", function(attente, roomOne){
+
+    // gestion de la room lorsqu'il n'y a qu'un joueur
+
+    ioClient.on("attente", function(attente, room){
         alert(attente);
         bouttonStart.disabled = true;
-        nameJ1.innerHTML = roomOne.joueurs[0].pseudo;
-        scoreJ1.innerHTML = roomOne.joueurs[0].score;
+        nameJ1.innerHTML = room.joueurs[0].pseudo;
+        scoreJ1.innerHTML = room.joueurs[0].score;
     })
 
-    ioClient.on("message",function(message, roomOne){
+    // gestion de la room quand les deux joueurs sont présents
+
+    ioClient.on("message",function(message, room){
         alert(message);
-        nameJ1.innerHTML = roomOne.joueurs[0].pseudo;
-        scoreJ1.innerHTML = roomOne.joueurs[0].score;
-        nameJ2.innerHTML = roomOne.joueurs[1].pseudo;
-        scoreJ2.innerHTML = roomOne.joueurs[1].score; 
+        nameJ1.innerHTML = room.joueurs[0].pseudo;
+        scoreJ1.innerHTML = room.joueurs[0].score;
+        nameJ2.innerHTML = room.joueurs[1].pseudo;
+        scoreJ2.innerHTML = room.joueurs[1].score; 
     })
 
-    ioClient.on("alerte", function(alerte, roomOne){
+    // gestion lorsque la room est pleine
+
+    ioClient.on("alerte", function(alerte){
         alert(alerte);
         document.location.reload();
     })
 
-    ioClient.on("joueurJ2", function(joueurJ2, joueurJ1){
-        console.log(joueurJ2, joueurJ1)
-        nameJ1.innerHTML = joueurJ1.player.pseudo;
-        scoreJ1.innerHTML = joueurJ1.score; 
-        nameJ2.innerHTML = joueurJ2.player.pseudo;
-        scoreJ2.innerHTML = joueurJ2.score;
-        
-    })
 
+    // gestion de la partie
 
     if(bouttonStart){
         bouttonStart.addEventListener("click", function(event){
@@ -331,7 +336,7 @@ ioClient.on("connect", function(){
     }
 
  
-
+    //gestion de l'affichage des scores
             
     ioClient.on("scores", function(joueurs){
 
@@ -341,6 +346,8 @@ ioClient.on("connect", function(){
         scoreJ2.innerHTML = joueurs[1].score;
 
     }) 
+
+    // gestion de la fin de partie
 
     ioClient.on("finDePartie", function(room){
         ioClient.emit("deconnexion",room);
