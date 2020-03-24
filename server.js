@@ -201,7 +201,7 @@ app.post("/inscription", function (req, res) {
                             expires: new Date(Date.now() + 900000),
                             httpOnly: false
                         })
-                        res.render("room");
+                        res.redirect("room");
                     });
                 }
             })
@@ -243,7 +243,7 @@ app.post("/connexion", function (req, res) {
                         httpOnly: false
                     })
 
-                    res.render("room")
+                    res.redirect("room")
                 } else {
                     res.render("home", {
                         message: "Identifiants incorrects"
