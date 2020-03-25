@@ -280,6 +280,11 @@ app.get("/room", function (req, res) {
     })
 })
 
+app.post("/room", function(req,res){
+    res.render("room")
+})
+
+
 
 
 

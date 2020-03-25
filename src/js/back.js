@@ -73,7 +73,7 @@ fenetreDeJeu.style.display = "none";
 /********************************************/
 
 
-ioClient = io("http://localhost:8080", {reconnection: true});
+ioClient = io("https://game-multi.herokuapp.com/", {reconnection: true});
 
 
 ioClient.on("connect", function(){
