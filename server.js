@@ -35,7 +35,7 @@ var sessionlife = 60 * 60 * 1000;
 
 const options = {
     store: new MongoStore({
-        url: "mongodb+srv://admin:Sergio94!@cluster0-eunil.mongodb.net/test?retryWrites=true&w=majority"
+        url: "mongodb+srv://admin:Sergio94!@cluster0-eunil.mongodb.net/jeu_mj"
     }),
     secret: "1234Secret",
     saveUninitialized: true,
