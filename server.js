@@ -418,7 +418,7 @@ webSocketServer.on("connect", function (socket) {
                 // console.log("emit response", room, response)
                 
                 webSocketServer.sockets.in(room).emit('response', response)
-            }, 8000)
+            }, 5000)
 
             i++
             
